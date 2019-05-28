@@ -1,0 +1,15 @@
+﻿namespace VRage.Game.ObjectBuilders.Campaign
+{
+    using System;
+    using System.Xml.Serialization;
+    using VRage.ObjectBuilders;
+
+    [MyObjectBuilderDefinition((Type) null, null), XmlSerializerAssembly("VRage.Game.XmlSerializers")]
+    public class MyObjectBuilder_CampaignSMTransition : MyObjectBuilder_Base
+    {
+        public string Name;
+        public string From;
+        public string To;
+    }
+}
+
