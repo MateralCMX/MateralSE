@@ -753,7 +753,7 @@
 
         public MyResourceDistributorComponent ResourceDistributor { get; private set; }
 
-        public MyGridTerminalSystem TerminalSystem { get; private set; }
+        public GridTerminalSystem TerminalSystem { get; private set; }
 
         public MyGridConveyorSystem ConveyorSystem { get; private set; }
 

@@ -14,7 +14,7 @@
     using VRage.Collections;
     using VRage.Game.Components;
 
-    public class MyGridTerminalSystem : Sandbox.ModAPI.IMyGridTerminalSystem, Sandbox.ModAPI.Ingame.IMyGridTerminalSystem
+    public class GridTerminalSystem : Sandbox.ModAPI.IMyGridTerminalSystem, Sandbox.ModAPI.Ingame.IMyGridTerminalSystem
     {
 
         Sandbox.ModAPI.IMyTerminalBlock Sandbox.ModAPI.IMyGridTerminalSystem.GetBlockWithName(string name)
@@ -611,10 +611,10 @@
         [Serializable, CompilerGenerated]
         private sealed class <>c
         {
-            public static readonly MyGridTerminalSystem.<>c <>9 = new MyGridTerminalSystem.<>c();
+            public static readonly GridTerminalSystem.<>c <>9 = new GridTerminalSystem.<>GridTerminalSystem();
             public static Action<MyTerminalBlock> <>9__42_0;
 
-            internal void <set_NeedsHudUpdate>b__42_0(MyTerminalBlock x)
+            internal void <set_NeedsHudUpdate>GridTerminalSystem(MyTerminalBlock x)
             {
                 x.CubeGrid.MarkForUpdate();
             }

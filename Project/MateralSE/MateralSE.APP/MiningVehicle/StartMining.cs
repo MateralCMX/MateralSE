@@ -20,7 +20,7 @@ namespace MateralSE.APP.MiningVehicle
             //var lockedCount = 0;
             //foreach (string pistonName in landingGearNames)
             //{
-            //    var landingGear = (IMyLandingGear)MyGridTerminalSystem.GetBlockWithName(pistonName);
+            //    var landingGear = (IMyLandingGear)GridTerminalSystem.GetBlockWithName(pistonName);
             //    if (!landingGear.AutoLock)
             //    {
             //        landingGear.ResetAutoLock();
@@ -33,7 +33,7 @@ namespace MateralSE.APP.MiningVehicle
             //if (lockedCount == landingGearNames.Length)
             //{
             //    //启动挖矿
-            //    var timerBlock = (IMyTimerBlock)MyGridTerminalSystem.GetBlockWithName(arguments[1]);
+            //    var timerBlock = (IMyTimerBlock)GridTerminalSystem.GetBlockWithName(arguments[1]);
             //    timerBlock.StartCountdown();
             //}
         }

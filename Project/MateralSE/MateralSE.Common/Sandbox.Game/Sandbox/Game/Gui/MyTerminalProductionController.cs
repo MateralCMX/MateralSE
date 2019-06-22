@@ -32,7 +32,7 @@
         private static Dictionary<MyDefinitionId, MyFixedPoint> m_requiredCountCache = new Dictionary<MyDefinitionId, MyFixedPoint>(MyDefinitionId.Comparer);
         private static List<MyBlueprintDefinitionBase.ProductionInfo> m_blueprintCache = new List<MyBlueprintDefinitionBase.ProductionInfo>();
         private IMyGuiControlsParent m_controlsParent;
-        private MyGridTerminalSystem m_terminalSystem;
+        private GridTerminalSystem m_terminalSystem;
         private Dictionary<int, MyAssembler> m_assemblersByKey = new Dictionary<int, MyAssembler>();
         private int m_assemblerKeyCounter;
         private MyGuiControlSearchBox m_blueprintsSearchBox;

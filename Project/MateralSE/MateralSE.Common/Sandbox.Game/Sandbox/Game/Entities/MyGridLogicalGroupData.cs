@@ -8,7 +8,7 @@
 
     public class MyGridLogicalGroupData : IGroupData<MyCubeGrid>
     {
-        internal readonly MyGridTerminalSystem TerminalSystem;
+        internal readonly GridTerminalSystem TerminalSystem;
         internal readonly MyGridWeaponSystem WeaponSystem;
         internal readonly MyResourceDistributorComponent ResourceDistributor;
 
@@ -18,7 +18,7 @@
 
         public MyGridLogicalGroupData(string debugName)
         {
-            this.TerminalSystem = new MyGridTerminalSystem();
+            this.TerminalSystem = new GridTerminalSystem();
             this.WeaponSystem = new MyGridWeaponSystem();
             this.ResourceDistributor = new MyResourceDistributorComponent(debugName);
         }

@@ -28,7 +28,7 @@
         private MyGuiControlListbox m_blockListbox;
         private MyGuiControlLabel m_blockNameLabel;
         private MyGuiControlBase m_blockControl;
-        private MyGridTerminalSystem m_terminalSystem;
+        private GridTerminalSystem m_terminalSystem;
         private List<MyBlockGroup> m_currentGroups = new List<MyBlockGroup>();
         private MyBlockGroup m_tmpGroup;
         private MyGuiControlSearchBox m_searchBox;
@@ -760,7 +760,7 @@
         private HashSet<MyTerminalBlock> CurrentBlocks =>
             this.m_tmpGroup.Blocks;
 
-        public MyGridTerminalSystem TerminalSystem =>
+        public GridTerminalSystem TerminalSystem =>
             this.m_terminalSystem;
     }
 }

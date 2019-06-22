@@ -19,11 +19,11 @@ namespace MateralSE.APP.MiningVehicle
             var pistonNames = arguments[0].Split(',');
             foreach (string pistonName in pistonNames)
             {
-                var piston = (IMyPistonBase) MyGridTerminalSystem.GetBlockWithName(pistonName);
+                var piston = (IMyPistonBase) GridTerminalSystem.GetBlockWithName(pistonName);
                 piston.Velocity = 0.025f;
             }
             //启动检测起落架定时器
-            var timerBlock = (IMyTimerBlock)MyGridTerminalSystem.GetBlockWithName(arguments[1]);
+            var timerBlock = (IMyTimerBlock)GridTerminalSystem.GetBlockWithName(arguments[1]);
             timerBlock.StartCountdown();
         }
     }
