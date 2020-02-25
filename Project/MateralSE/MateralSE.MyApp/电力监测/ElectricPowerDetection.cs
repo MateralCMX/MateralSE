@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VRageMath;
 
 namespace MateralSE.MyApp.电力监测
 {
@@ -32,6 +33,28 @@ namespace MateralSE.MyApp.电力监测
             }
             return lcdText;
         }
+        public string GetGuidText(out Color lcdColor)
+        {
+            if (_baseBatteryModel.StoredPowerSHCollagen < 25)
+            {
+                lcdColor = new Color(255, 0, 0);
+            }
+            else if (_baseBatteryModel.StoredPowerSHCollagen < 75)
+            {
+                lcdColor = new Color(255, 255, 0);
+            }
+            else
+            {
+                lcdColor = new Color(0, 255, 0);
+            }
+            string guidText = string.Empty;
+            double count = _baseBatteryModel.StoredPowerSHCollagen / 10;
+            for (var i = 0; i < count; i++)
+            {
+                guidText += "||";
+            }
+            return guidText;
+        }
         public void AutomaticManagement()
         {
             _baseBatteryModel.ChangeMode(_otherBatteryModel.CurrentStoredPowerCount < _otherBatteryModel.MaxStoredPowerCount ? ChargeMode.Auto : ChargeMode.Recharge);
@@ -39,7 +62,6 @@ namespace MateralSE.MyApp.电力监测
     }
     public class BatteryModel
     {
-        private ChargeMode upMode;
         private readonly List<IMyBatteryBlock> _batteryBlocks;
         public float CurrentStoredPowerCount { get; }
         public float MaxStoredPowerCount { get; }
@@ -54,8 +76,6 @@ namespace MateralSE.MyApp.电力监测
         }
         public void ChangeMode(ChargeMode chargeMode)
         {
-            if (upMode == chargeMode) return;
-            upMode = chargeMode;
             foreach (IMyBatteryBlock batteryBlock in _batteryBlocks)
             {
                 batteryBlock.ChargeMode = chargeMode;

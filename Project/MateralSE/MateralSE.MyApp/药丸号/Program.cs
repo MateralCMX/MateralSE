@@ -3,12 +3,14 @@ using MateralSE.MyApp.资源监测;
 using Sandbox.ModAPI.Ingame;
 using System.Collections.Generic;
 using System.Linq;
+using MateralSE.MyApp.容量监测;
 using VRageMath;
 
 namespace MateralSE.MyApp.药丸号
 {
     public class Program : MyGridProgram
     {
+        private VolumeDetection _volumeDetection;
         private ElectricPowerDetection _electricPowerDetection;
         private const string BaseBatteryName = "药丸号-电池";
         private IMyTextSurface _electricPowerTextPanel;
@@ -59,8 +61,14 @@ namespace MateralSE.MyApp.药丸号
             if (_electricPowerTextPanel == null) _electricPowerTextPanel = (IMyTextSurface)GridTerminalSystem.GetBlockWithName("电力统计面板");
             if (_electricPowerDetection == null) _electricPowerDetection = new ElectricPowerDetection();
             _electricPowerDetection.Init(baseBatteryBlocks, otherBatteryBlocks);
+            var cargoContainers = new List<IMyTerminalBlock>();
+            GridTerminalSystem.GetBlocksOfType<IMyCargoContainer>(cargoContainers);
+            if (_volumeDetection == null) _volumeDetection = new VolumeDetection(cargoContainers);
+            _volumeDetection.UpdateInfo();
             lcdText = _electricPowerDetection.GetText();
+            lcdText += _volumeDetection.GetText();
             _electricPowerTextPanel.WriteText(lcdText);
+            _electricPowerDetection.AutomaticManagement();
         }
     }
 }

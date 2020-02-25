@@ -61,8 +61,8 @@ namespace MateralSE.MyApp.资源监测
         private readonly int _alertValue;
         public string TypeID { get; }
         public float Inventory { get; set; }
-        public bool IsAlarm { get; }
-        public bool IsSeriousAlarm { get; }
+        public bool IsAlarm => Inventory <= _alertValue;
+        public bool IsSeriousAlarm => Inventory / _alertValue < 0.25;
         public string AlarmText
         {
             get
@@ -70,7 +70,7 @@ namespace MateralSE.MyApp.资源监测
                 string result = string.Empty;
                 if (!IsAlarm) return result;
                 string describe = IsSeriousAlarm ? "库存严重不足" : "库存不足";
-                result = _alertValue > 999 ? $"{_name}:{Math.Round(Inventory / 1000, 2)}K[{describe}]" : $"{_name}:{Math.Round(Inventory, 2)}[{describe}]";
+                result = _alertValue > 999 ? $"{_name}:{Math.Round(Inventory / 1000, 2)}K/{_alertValue / 1000}K[{describe}]" : $"{_name}:{Math.Round(Inventory, 2)}/{_alertValue}[{describe}]";
                 return result;
             }
         }
@@ -79,8 +79,6 @@ namespace MateralSE.MyApp.资源监测
             _name = name;
             TypeID = typeID;
             _alertValue = alertValue;
-            IsAlarm = Inventory <= _alertValue;
-            IsSeriousAlarm = Inventory / _alertValue < 0.25;
         }
     }
 }

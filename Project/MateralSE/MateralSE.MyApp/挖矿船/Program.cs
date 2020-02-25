@@ -1,9 +1,9 @@
-﻿using MateralSE.MyApp.电力监测;
-using Sandbox.ModAPI.Ingame;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MateralSE.MyApp.容量监测;
+using MateralSE.MyApp.电力监测;
+using Sandbox.ModAPI.Ingame;
 
-namespace MateralSE.MyApp.药丸号_舰载机
+namespace MateralSE.MyApp.挖矿船
 {
     public class Program : MyGridProgram
     {

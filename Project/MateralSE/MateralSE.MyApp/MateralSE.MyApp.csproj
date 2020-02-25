@@ -82,7 +82,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="药丸号_舰载机\Program.cs" />
+    <Compile Include="空间站\Program.cs" />
+    <Compile Include="挖矿船\Program.cs" />
     <Compile Include="资源监测\Debug.cs" />
     <Compile Include="资源监测\ResourceDetection.cs" />
     <Compile Include="药丸号\Program.cs" />
