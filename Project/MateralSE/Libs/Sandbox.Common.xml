@@ -40,6 +40,27 @@
             Removes an attached pilot. Call on server.
             </summary>
         </member>
+        <member name="M:Sandbox.ModAPI.IMyFunctionalBlock.GetFramesFromLastTrigger">
+            <summary>
+            Gets number of frames from the last trigger of the update timer
+            </summary>
+            <returns>number of frames</returns>
+        </member>
+        <member name="E:Sandbox.ModAPI.IMyFunctionalBlock.UpdateTimerTriggered">
+            <summary>
+            Triggered when update timer ticks, event is fired after the block does all gameplay stuff
+            </summary>
+        </member>
+        <member name="P:Sandbox.ModAPI.IMyFunctionalBlock.IsUpdateTimerCreated">
+            <summary>
+            Returns true if timer was created. If the block does not use timer, this will be false.
+            </summary>
+        </member>
+        <member name="P:Sandbox.ModAPI.IMyFunctionalBlock.IsUpdateTimerEnabled">
+            <summary>
+            Returns true if timer is enabled and ticking.
+            </summary>
+        </member>
         <member name="T:Sandbox.ModAPI.IMyGridProgram">
             <summary>
             The interface for the grid program provides extra access for the game and for mods. See <see cref="T:Sandbox.ModAPI.Ingame.MyGridProgram"/> for the class the scripts
@@ -506,6 +527,11 @@
             Gets the current roll direction indicator
             </summary>
             <remarks>Set by MoveAndRotate, regardless if a movement happened.</remarks>
+        </member>
+        <member name="P:Sandbox.ModAPI.IMyShipController.IsDefault3rdView">
+            <summary>
+            If player gets into this cockpit for the first time, the camera is in 3rd view
+            </summary>
         </member>
         <member name="T:Sandbox.ModAPI.IMyShipWelder">
             <summary>

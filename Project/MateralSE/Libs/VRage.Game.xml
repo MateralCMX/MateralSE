@@ -343,12 +343,12 @@
         <member name="F:VRage.Game.Components.MyPositionComponentBase.m_localMatrix">
             Internal local matrix relative to parent of entity.
         </member>
-        <member name="P:VRage.Game.Components.MyPositionComponentBase.WorldMatrix">
+        <member name="P:VRage.Game.Components.MyPositionComponentBase.WorldMatrixRef">
             <summary>
             World matrix of this physic object. Use it whenever you want to do world-matrix transformations with this physic objects.
             </summary>
         </member>
-        <member name="P:VRage.Game.Components.MyPositionComponentBase.LocalMatrix">
+        <member name="P:VRage.Game.Components.MyPositionComponentBase.LocalMatrixRef">
             <summary>
             Gets or sets the local matrix.
             </summary>
@@ -390,12 +390,25 @@
             The local volume offset.
             </value>
         </member>
-        <member name="M:VRage.Game.Components.MyPositionComponentBase.SetWorldMatrix(VRageMath.MatrixD,System.Object,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:VRage.Game.Components.MyPositionComponentBase.SetWorldMatrix(VRageMath.MatrixD@,System.Object,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Sets the world matrix.
             </summary>
             <param name="worldMatrix">The world matrix.</param>
             <param name="source">The source object that caused this change or null when not important.</param>
+            <param name="forceUpdate"></param>
+            <param name="updateChildren"></param>
+            <param name="updateLocal"></param>
+            <param name="skipTeleportCheck"></param>
+            <param name="forceUpdateAllChildren"></param>
+            <param name="ignoreAssert"></param>
+        </member>
+        <member name="M:VRage.Game.Components.MyPositionComponentBase.RecalculateWorldMatrixHRIfNeeded(System.Boolean)">
+            <summary>
+            Recursively recalculate world matrices for this entity and it's parents.
+            </summary>
+            <param name="updateChildren"></param>
+            <returns>True if the world matrix has changed.</returns>
         </member>
         <member name="M:VRage.Game.Components.MyPositionComponentBase.SetLocalMatrix(VRageMath.Matrix@,System.Object,System.Boolean)">
             <summary>
@@ -440,6 +453,12 @@
             </summary>
             <param name="source">The source object that caused this event.</param>
         </member>
+        <member name="M:VRage.Game.Components.MyPositionComponentBase.OnAddedToContainer">
+            <inheritdoc />
+        </member>
+        <member name="M:VRage.Game.Components.MyPositionComponentBase.OnBeforeRemovedFromContainer">
+            <inheritdoc />
+        </member>
         <member name="P:VRage.Game.Components.MyRenderComponentBase.ModelStorage">
             <summary>
             Used by game to store model here. In game this is always of type MyModel.
@@ -481,6 +500,16 @@
         <member name="F:VRage.Game.Components.MySessionComponentDescriptor.Priority">
             <summary>
             Lower Priority is loaded before higher Priority
+            </summary>
+        </member>
+        <member name="P:VRage.Game.Components.MySessionComponentDescriptor.IsServerOnly">
+            <summary>
+            Is server only is used for client request of the world. if the component is server only, it's not sent to the client on world request.
+            </summary>
+        </member>
+        <member name="P:VRage.Game.Components.MySessionComponentBase.IsServerOnly">
+            <summary>
+            Is server only is used for client request of the world. if the component is server only, it's not sent to the client on world request.
             </summary>
         </member>
         <member name="P:VRage.Game.Components.MySessionComponentBase.IsRequiredByGame">
@@ -553,7 +582,7 @@
         </member>
         <member name="M:VRage.Game.Components.MyPositionComponent.UpdateChildren(System.Object,System.Boolean)">
             <summary>
-            Updates the childs of this entity.
+            Updates the children of this entity.
             </summary>
         </member>
         <member name="M:VRage.Game.Components.MyPositionComponent.OnWorldPositionChanged(System.Object,System.Boolean,System.Boolean)">
@@ -597,22 +626,6 @@
             Parallel thread - listener.
             </summary>
         </member>
-        <member name="P:VRage.Game.SessionComponents.MyVisualScriptManagerSessionComponent.RunningLevelScriptNames">
-            <summary>
-            Array of running level script names.
-            </summary>
-        </member>
-        <member name="P:VRage.Game.SessionComponents.MyVisualScriptManagerSessionComponent.FailedLevelScriptExceptionTexts">
-            <summary>
-            Array of exceptions raised when the scripts were running.
-            The name of the script is at the same index. (RunningLevelScriptNames)
-            </summary>
-        </member>
-        <member name="P:VRage.Game.SessionComponents.MyVisualScriptManagerSessionComponent.CampaignModPath">
-            <summary>
-            Path a campaign repository in case of modded campaign.
-            </summary>
-        </member>
         <member name="T:VRage.Game.Core.VRageCore">
             <summary>
             Class initializing the (minimal) engine, setting the render properties based on the data.
@@ -627,6 +640,12 @@
         <member name="M:VRage.Game.Core.VRageCore.Dispose">
             <summary>
             Dispose the resources, unload engine.
+            </summary>
+        </member>
+        <member name="M:VRage.Game.Debugging.MyExternalDebugStructures.ReadMessageFromPtr``1(VRage.Game.Debugging.MyExternalDebugStructures.CommonMsgHeader@,System.Byte[],``0@)">
+            <summary>
+            Convert from raw data to message.
+            Message must be struct with sequential layout having first field "Header" of type "CommonMsg".
             </summary>
         </member>
         <member name="P:VRage.Game.Definitions.MyFontDefinition.IsValid">
@@ -1718,6 +1737,33 @@
             <param name="other"></param>
             <returns></returns>
         </member>
+        <member name="M:VRage.Game.ModAPI.IMyCubeGrid.IsRoomAtPositionAirtight(VRageMath.Vector3I)">
+            <summary>
+            Is room at specified position airtight
+            </summary>
+            <param name="vector3I">position</param>
+            <returns>true if airtight</returns>
+        </member>
+        <member name="P:VRage.Game.ModAPI.IMyCubeGrid.GridPresenceTier">
+            <summary>
+            Gets grid presence tier
+            </summary>
+        </member>
+        <member name="P:VRage.Game.ModAPI.IMyCubeGrid.PlayerPresenceTier">
+            <summary>
+            Gets player presence tier
+            </summary>
+        </member>
+        <member name="E:VRage.Game.ModAPI.IMyCubeGrid.GridPresenceTierChanged">
+            <summary>
+            Triggered when grid presence tier is changed
+            </summary>
+        </member>
+        <member name="E:VRage.Game.ModAPI.IMyCubeGrid.PlayerPresenceTierChanged">
+            <summary>
+            Triggered when player presence tier is changed
+            </summary>
+        </member>
         <member name="T:VRage.Game.ModAPI.MyIntegrityChangeEnum">
             <summary>
             Types of block integrity change that can occur
@@ -2354,6 +2400,24 @@
             <param name="toList">List of hits</param>
             <param name="raycastCollisionFilter">Collision filter.</param>
             <param name="callback">Callback were results are returned to when query is done</param>
+        </member>
+        <member name="M:VRage.Game.ModAPI.IMyPhysics.CalculateNaturalGravityAt(VRageMath.Vector3D,System.Single@)">
+            <summary>
+            Returns current natural gravity at world position.
+            </summary>
+            <param name="worldPosition">Target position</param>
+            <param name="naturalGravityInterference">Natural gravity affects artificial gravity strength.
+            Use this value when calling <see cref="M:VRage.Game.ModAPI.IMyPhysics.CalculateArtificialGravityAt(VRageMath.Vector3D,System.Single)"/> to get effective (physical) strength of artificial gravity at point.</param>
+            <returns></returns>
+        </member>
+        <member name="M:VRage.Game.ModAPI.IMyPhysics.CalculateArtificialGravityAt(VRageMath.Vector3D,System.Single)">
+            <summary>
+            Returns current artificial gravity at world position.
+            </summary>
+            <param name="worldPosition">Target position</param>
+            <param name="naturalGravityInterference">Artificial gravity strength is affected by presence of natural gravity.
+            Use <see cref="M:VRage.Game.ModAPI.IMyPhysics.CalculateNaturalGravityAt(VRageMath.Vector3D,System.Single@)"/> to get correct value for given point in space.
+            Value of 1 indicates no natural gravity effect.</param>
         </member>
         <member name="E:VRage.Game.ModAPI.IMyPlayer.IdentityChanged">
             <summary>
@@ -4576,6 +4640,41 @@
             <param name="onTransactionCallback">on transaction callback</param>
             <param name="onCancelCallback">on cancel callback</param>
         </member>
+        <member name="T:VRage.Game.ModAPI.MyUpdateTiersGridPresence">
+            <summary>
+            Describes tiers of grid presence (if any other grid is nearby)
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ModAPI.MyUpdateTiersGridPresence.Normal">
+            <summary>
+            There is grid nearby
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ModAPI.MyUpdateTiersGridPresence.Tier1">
+            <summary>
+            There is not grid nearby, updates can behave differently (slower or not running)
+            </summary>
+        </member>
+        <member name="T:VRage.Game.ModAPI.MyUpdateTiersPlayerPresence">
+            <summary>
+            Describes tiers of player presence (if any player is nearby and grid is replicated to the client)
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ModAPI.MyUpdateTiersPlayerPresence.Normal">
+            <summary>
+            Player is nearby, grid is replicated to the client
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ModAPI.MyUpdateTiersPlayerPresence.Tier1">
+            <summary>
+            Player is not nearby, grid is not replicated to the client. Update time can be slower.
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ModAPI.MyUpdateTiersPlayerPresence.Tier2">
+            <summary>
+            Player is not nearby, grid is not replicated to the client. Update time can be even more slower.
+            </summary>
+        </member>
         <member name="F:VRage.Game.MySunProperties.BaseSunDirectionNormalized">
             <summary>Direction TO sun</summary>
         </member>
@@ -4592,6 +4691,21 @@
             Value generated at runtime to ensure correctness. Do not serialize or deserialize.
             This is what the old cast to int used to result into, but now numbers depend on order in XML file.
             TODO Serialize to XML and ensure upon loading that these values are starting from 0 and continuous.
+            </summary>
+        </member>
+        <member name="T:VRage.Game.Entities.IMyTieredUpdateBlock">
+            <summary>
+            Describes tiered update block
+            </summary>
+        </member>
+        <member name="P:VRage.Game.Entities.IMyTieredUpdateBlock.IsTieredUpdateSupported">
+            <summary>
+            Gets is tiered update supported value, changing value in runtime is not supported
+            </summary>
+        </member>
+        <member name="M:VRage.Game.Entities.IMyTieredUpdateBlock.ChangeTier">
+            <summary>
+            Called when block needs to change tier
             </summary>
         </member>
         <member name="T:VRage.Game.Entity.EntityComponents.Interfaces.IMyGameLogicComponent">
@@ -4974,6 +5088,11 @@
             <param name="bWireFramed"></param>
             <param name="wireDivideRatio"></param>
         </member>
+        <member name="F:VRage.Game.MySimpleObjectDraw.MaxLinesPerDraw">
+            <summary>
+            Maximum number of lines to draw in a single object.
+            </summary>
+        </member>
         <member name="M:VRage.Game.MySimpleObjectDraw.GenerateLines(VRageMath.Vector3D,VRageMath.Vector3D,VRageMath.Vector3D@,VRageMath.MatrixD@,System.Collections.Generic.List{VRageMath.LineD}@,System.Int32)">
             <summary>
             GenerateLines
@@ -4984,13 +5103,6 @@
             <param name="worldMatrix"></param>
             <param name="lineBuffer"></param>
             <param name="divideRatio"></param>
-        </member>
-        <member name="M:VRage.Game.MyAnimatedParticle.GetBillboardQuadRotated(VRageRender.MyBillboard,VRageMath.Vector3D@,System.Single,System.Single)">
-            <summary>
-            Return quad whos face is always looking to the camera. 
-            IMPORTANT: This bilboard looks same as point vertexes (point sprites) - horizontal and vertical axes of billboard are always parallel to screen
-            That means, if billboard is in the left-up corner of screen, it won't be distorted by perspective. If will look as 2D quad on screen. As I said, it's same as GPU points.
-            </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "M:VRage.Game.MyParticleEffect.Stop(System.Boolean)" -->
         <member name="M:VRage.Game.MyParticleEffect.Play">
@@ -5011,26 +5123,6 @@
         <member name="M:VRage.Game.MyParticleEffect.StopLights">
             <summary>
             This method stops all lights
-            </summary>
-        </member>
-        <member name="P:VRage.Game.MyParticleGeneration.Birth">
-            <summary>
-            Public members to easy access
-            </summary>
-        </member>
-        <member name="P:VRage.Game.MyParticleGPUGeneration.ArraySize">
-            <summary>
-            Public members to easy access
-            </summary>
-        </member>
-        <member name="P:VRage.Game.MyParticleLight.Position">
-            <summary>
-            Public members to easy access
-            </summary>
-        </member>
-        <member name="P:VRage.Game.MyParticleSound.Range">
-            <summary>
-            Public members to easy access
             </summary>
         </member>
         <member name="M:VRage.Game.GUI.MyAlphaBlinkBehavior.UpdateBlink">
@@ -5282,11 +5374,6 @@
         <member name="M:VRage.Game.Models.MyModel.Dispose">
             <summary>
             Dispose
-            </summary>
-        </member>
-        <member name="F:VRage.Game.Models.MyModels.m_loadModelEvent">
-            <summary>
-            Event that occures when some model needs to be loaded.
             </summary>
         </member>
         <member name="T:VRage.Game.MyVRageConstants">
@@ -5761,6 +5848,57 @@
             Defines placement settings for building mode.
             </summary>
         </member>
+        <member name="F:VRage.Game.ObjectBuilders.Gui.MyHighlightData.EntityId">
+            <summary>
+            Id of entity that should be highlighted.
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ObjectBuilders.Gui.MyHighlightData.OutlineColor">
+            <summary>
+            Color of highlight overlay.
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ObjectBuilders.Gui.MyHighlightData.Thickness">
+            <summary>
+            Overlay thickness.
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ObjectBuilders.Gui.MyHighlightData.PulseTimeInFrames">
+            <summary>
+            Number of frames between pulses.
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ObjectBuilders.Gui.MyHighlightData.PlayerId">
+            <summary>
+            Id of player that should do the highlight.
+            (For non local players its send to client)
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ObjectBuilders.Gui.MyHighlightData.IgnoreUseObjectData">
+            <summary>
+            When set to true the system does not use the 
+            IMyUseObject logic to process the highlight.
+            </summary>
+        </member>
+        <member name="F:VRage.Game.ObjectBuilders.Gui.MyHighlightData.SubPartNames">
+            <summary>
+            Specify there the names of the subparts that would be highlighted
+            instead of the full model.
+            Format: "subpart_1;subpart_2"
+            </summary>
+        </member>
+        <member name="M:VRage.Game.ObjectBuilders.Gui.MyHighlightData.#ctor(System.Int64,System.Int32,System.UInt64,System.Nullable{VRageMath.Color},System.Boolean,System.Int64,System.String)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="entityId">Id of entity that should be highlighted.</param>
+            <param name="thickness">Overlay thickness.</param>
+            <param name="pulseTimeInFrames">Number of frames between the pulses.</param>
+            <param name="outlineColor">Color of overlay.</param>
+            <param name="ignoreUseObjectData">Used to ignore IMyUseObject logic for highlighting.</param>
+            <param name="playerId">Id of receiving player.</param>
+            <param name="subPartNames">Names of subparts that should be highlighted instead of the full model.</param>
+        </member>
         <member name="F:VRage.Game.ObjectBuilders.MyComponentBlockEntry.Main">
             <summary>
             Whether the given block should be used when spawning the component which it contains
@@ -5935,6 +6073,13 @@
             <summary>
             This is used for GUI to show the amount of health points (durability) of the weapons and tools. This is updated through Durability entity component if entity exists..
             </summary>
+        </member>
+        <member name="M:VRage.Game.MyObjectBuilder_ProfilerSnapshot.GetProfilerDumpPath(System.Int32)">
+            <summary>
+            Get the path where a profiler dump with <paramref name="index"/> should be stored.
+            </summary>
+            <param name="index">The index of the profiler dump.</param>
+            <returns>The path where the dump should be stored.</returns>
         </member>
         <member name="F:VRage.Game.MyObjectBuilder_ProjectorBase.ProjectedGrid">
             <summary>
@@ -6190,6 +6335,11 @@
             part and initializes the collecting of syntax.
             </summary>
         </member>
+        <member name="T:VRage.Game.VisualScripting.ScriptBuilder.Nodes.MyVisualSyntaxDelayNode">
+            <summary>
+            Sequence dependent node that creates syntax for timed delay
+            </summary>
+        </member>
         <member name="T:VRage.Game.VisualScripting.ScriptBuilder.Nodes.MyVisualSyntaxEventNode">
             <summary>
             This node represents a Method signature / entrypoint to method.
@@ -6262,7 +6412,7 @@
             Resets nodes to state when they are ready for new run of the builder.
             </summary>
         </member>
-        <member name="M:VRage.Game.VisualScripting.ScriptBuilder.Nodes.MyVisualSyntaxNode.VariableSyntaxName(System.String)">
+        <member name="M:VRage.Game.VisualScripting.ScriptBuilder.Nodes.MyVisualSyntaxNode.VariableSyntaxName(System.String,System.Boolean)">
             <summary>
             Unique identifier within class syntax.
             </summary>
@@ -6273,13 +6423,13 @@
             Prevents duplicities in syntax.
             </summary>
         </member>
-        <member name="M:VRage.Game.VisualScripting.ScriptBuilder.Nodes.MyVisualSyntaxNode.CollectInputExpressions(System.Collections.Generic.List{Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax})">
+        <member name="M:VRage.Game.VisualScripting.ScriptBuilder.Nodes.MyVisualSyntaxNode.CollectInputExpressions(System.Collections.Generic.List{Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax},System.Collections.Generic.List{Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax})">
             <summary>
             Returns ordered set of expressions from value suppliers.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:VRage.Game.VisualScripting.ScriptBuilder.Nodes.MyVisualSyntaxNode.CollectSequenceExpressions(System.Collections.Generic.List{Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax})">
+        <member name="M:VRage.Game.VisualScripting.ScriptBuilder.Nodes.MyVisualSyntaxNode.CollectSequenceExpressions(System.Collections.Generic.List{Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax},System.Collections.Generic.List{Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax})">
             <summary>
             Returns ordered set of all expressions.
             </summary>
@@ -6924,7 +7074,7 @@
             <param name="descriptor">Descriptor</param>
             <param name="type">Type</param>
         </member>
-        <member name="M:VRage.Factory.MyObjectFactory`2.CreateInstance(VRage.ObjectBuilders.MyObjectBuilderType)">
+        <member name="M:VRage.Factory.MyObjectFactory`2.CreateInstance(VRage.ObjectBuilders.MyObjectBuilderType,System.Object[])">
             <summary>
             Create default instance from object builder.
             </summary>
@@ -7294,6 +7444,16 @@
         <member name="M:VRage.Utils.MyDebugWorkTrackerExtensions.Stats(VRage.Utils.MyDebugWorkTracker{System.Int32})">
             Returns last/min/avg/max out of the history
         </member>
+        <member name="T:VRage.Voxels.Clipmap.MyClipmapCellVicinity">
+            <summary>
+            Signature of a cell's vicinity.
+            </summary>
+        </member>
+        <member name="F:VRage.Voxels.Clipmap.MyClipmapCellVicinity.Invalid">
+            <summary>
+            Invalid vicinity mark.
+            </summary>
+        </member>
         <member name="P:VRage.Voxels.Clipmap.MyClipmapFullMeshJob.Clipmap">
             <summary>
             Target clipmap.
@@ -7443,6 +7603,11 @@
             Distance at which we proceed to update a cell.
             </summary>
         </member>
+        <member name="F:VRage.Voxels.Clipmap.MyVoxelClipmap.m_maxLod">
+            <summary>
+            Distance at which we proceed to update a cell.
+            </summary>
+        </member>
         <member name="F:VRage.Voxels.Clipmap.MyVoxelClipmap.m_cache">
             <summary>
             Cell cache for this clipmap instance.
@@ -7513,7 +7678,7 @@
             <param name="guide"></param>
             <param name="constitution">The constitution of the range where the mesh was calculated.</param>
         </member>
-        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmap.FeedMeshResult(VRage.Voxels.MyCellCoord,VRage.Voxels.Sewing.VrSewGuide,VRage.Voxels.MyVoxelContentConstitution)">
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmap.FeedMeshResult(VRage.Voxels.MyCellCoord,VRage.Voxels.Sewing.VrSewGuide,VRage.Voxels.MyVoxelContentConstitution,VRage.Voxels.Clipmap.MyClipmapCellVicinity)">
             <summary>
             Provide the calculated mesh to it's cell.
             </summary>
@@ -7600,7 +7765,7 @@
             List of operations to be disabled when a given cell is not available.
             </summary>
         </member>
-        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmap.Stitch(VRage.Voxels.MyCellCoord)">
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmap.Stitch(VRage.Voxels.MyCellCoord,VRage.Voxels.Clipmap.MyClipmapCellVicinity)">
              <summary>
              Schedule stitching for a given cell.
             
@@ -7670,6 +7835,14 @@
             Fire all visibility or normal stitch dependencies for a cell.
             </summary>
             <param name="cell"></param>
+        </member>
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmap.CheckVicinity(VRage.Voxels.MyCellCoord[],System.Int32)">
+            <summary>
+            Check that a set of cells are proper neighbors.
+            </summary>
+            <param name="cells"></param>
+            <param name="cellSize"></param>
+            <returns></returns>
         </member>
         <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmap.MakeFulfilled(VRage.Voxels.MyCellCoord)">
             <summary>
@@ -7844,13 +8017,15 @@
             <param name="clipmapId">The clipmap owning the evicted cells.</param>
             <param name="range">The range of cells to be evicted.</param>
         </member>
-        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapCache.TryRead(System.UInt32,VRage.Voxels.MyCellCoord,VRage.Voxels.Sewing.VrSewGuide@)">
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapCache.TryRead(System.UInt32,VRage.Voxels.MyCellCoord,VRage.Voxels.Sewing.VrSewGuide@,VRage.Voxels.Clipmap.MyClipmapCellVicinity@,VRage.Voxels.MyVoxelContentConstitution@)">
             <summary>
             Try to retrieve cached cell data given it's id.
             </summary>
             <param name="clipmapId">Clipmap owning the cell.</param>
             <param name="cell">The cell coordinate.</param>
             <param name="data">The cached cell data if any.</param>
+            <param name="vicinity"></param>
+            <param name="constitution"></param>
             <returns>Whether the cell was found in the cache or not.</returns>
         </member>
         <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapCache.IsCached(System.UInt32,VRage.Voxels.MyCellCoord,VRage.Voxels.Sewing.VrSewGuide)">
@@ -7862,13 +8037,15 @@
             <param name="dataGuide"></param>
             <returns></returns>
         </member>
-        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapCache.Write(System.UInt32,VRage.Voxels.MyCellCoord,VRage.Voxels.Sewing.VrSewGuide)">
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapCache.Write(System.UInt32,VRage.Voxels.MyCellCoord,VRage.Voxels.Sewing.VrSewGuide,VRage.Voxels.Clipmap.MyClipmapCellVicinity,VRage.Voxels.MyVoxelContentConstitution)">
             <summary>
             Record mesh data for a cell into the cache, evicting the oldest entry if necessary.
             </summary>
-            <param name="clipmapId"></param>
-            <param name="cell"></param>
-            <param name="guide"></param>
+            <param name="clipmapId">Id of the parent clipmap.</param>
+            <param name="cell">Cell key.</param>
+            <param name="guide">The sew guide to record.</param>
+            <param name="vicinity">The vicinity of the cell at the time of writing.</param>
+            <param name="constitution">The constitution of the cell at the time of writing.</param>
         </member>
         <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapCache.CycleDebugCounters">
             <summary>
@@ -8091,7 +8268,7 @@
              <param name="cell"></param>
              <param name="guide"></param>
         </member>
-        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapRing.UpdateCellRender(VRageMath.Vector3I,VRageRender.Voxels.MyVoxelRenderCellData@)">
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapRing.UpdateCellRender(VRageMath.Vector3I,VRageRender.Voxels.MyVoxelRenderCellData@,VRageRender.Voxels.IMyVoxelUpdateBatch@)">
             <summary>
             Update a cell's render data.
             </summary>
@@ -8100,6 +8277,14 @@
             <returns>Whether the update caused a new cell to be created and made visible.</returns>
         </member>
         <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapRing.TryGetCell(VRageMath.Vector3I,VRage.Voxels.Clipmap.MyVoxelClipmapRing.CellData@)">
+            <summary>
+            Get cell data for position.
+            </summary>
+            <param name="cell"></param>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapRing.GetCellVicinity(VRageMath.Vector3I)">
             <summary>
             Get cell data for position.
             </summary>
@@ -8149,16 +8334,6 @@
             </summary>
             This simply discards all cells and re-sets the ring.
         </member>
-        <member name="T:VRage.Voxels.Clipmap.MyVoxelClipmapRing.Vicinity">
-            <summary>
-            Signature of a cell's vicinity.
-            </summary>
-        </member>
-        <member name="F:VRage.Voxels.Clipmap.MyVoxelClipmapRing.Vicinity.Invalid">
-            <summary>
-            Invalid vicinity mark.
-            </summary>
-        </member>
         <member name="T:VRage.Voxels.Clipmap.MyVoxelClipmapSettings">
             <summary>
             Descriptor for the configurable parameters of a clipmap.
@@ -8176,17 +8351,25 @@
             There must be exactly MyClipmap.LodCount entries in the array and they must be such that LodRanges[i] &lt;= LodRanges[i + 1].
             </summary>
         </member>
+        <member name="F:VRage.Voxels.Clipmap.MyVoxelClipmapSettings.MinSize">
+            <summary>
+            Minimum number of voxels at maximum lod range.
+            </summary>
+        </member>
         <member name="P:VRage.Voxels.Clipmap.MyVoxelClipmapSettings.IsValid">
             <summary>
             Whether the contents of the settinmmgs are valid.
             </summary>
+        </member>
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapSettings.ToString">
+            <inheritdoc />
         </member>
         <member name="F:VRage.Voxels.Clipmap.MyVoxelClipmapSettings.Default">
             <summary>
             Default settings for the clipmap.
             </summary>
         </member>
-        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapSettings.Create(System.Int32,System.Int32,System.Single,System.Int32,System.Int32)">
+        <member name="M:VRage.Voxels.Clipmap.MyVoxelClipmapSettings.Create(System.Int32,System.Int32,System.Single,System.Int32,System.Int32,System.Int32)">
             <summary>
             Create a settings instance from simpler parameters.
             </summary>
@@ -8642,9 +8825,14 @@
             Invert mouse Y axis
             </summary>
         </member>
+        <member name="F:MyCommonTexts.InvertMouseScrollBlockSelection">
+            <summary>
+            Invert mouse scroll for block selection
+            </summary>
+        </member>
         <member name="F:MyCommonTexts.Joystick">
             <summary>
-            Joystick or gamepad
+            Controller selection
             </summary>
         </member>
         <member name="F:MyCommonTexts.JoystickButtonLeft">
@@ -8669,17 +8857,17 @@
         </member>
         <member name="F:MyCommonTexts.JoystickDeadzone">
             <summary>
-            Joystick deadzone width
+            Controller deadzone width
             </summary>
         </member>
         <member name="F:MyCommonTexts.JoystickExponent">
             <summary>
-            Joystick gradual precision
+            Controller gradual precision
             </summary>
         </member>
         <member name="F:MyCommonTexts.JoystickSensitivity">
             <summary>
-            Joystick sensitivity
+            Controller sensitivity
             </summary>
         </member>
         <member name="F:MyCommonTexts.ScreenOptionsControls_Keyboard1">
@@ -9654,7 +9842,7 @@
         </member>
         <member name="F:MyCommonTexts.MessageBoxTextConfirmExperimental">
             <summary>
-            Enabling experimental mode will unlock unofficial and not fully developed and tested features. You may experience problems.      Do you want to continue?
+            Experimental Mode enables features which can make the game run poorly or destabilize it. We do not provide support for Experimental Mode. Only experienced players should enable Experimental Mode.      Are you sure you wish to continue?     
             </summary>
         </member>
         <member name="F:MyCommonTexts.MessageBoxTextNoSavedWorlds">
@@ -9762,11 +9950,6 @@
             Toolbar Config
             </summary>
         </member>
-        <member name="F:MyCommonTexts.SteamOverlayDisabledCaption">
-            <summary>
-            {0} Overlay is disabled
-            </summary>
-        </member>
         <member name="F:MyCommonTexts.LoadScreenButtonPublish">
             <summary>
             Publish
@@ -9774,22 +9957,22 @@
         </member>
         <member name="F:MyCommonTexts.MessageBoxTextWorldPublished">
             <summary>
-            Publish has been completed successfully. If you have {0} Overlay enabled, a page will open and you can  edit attributes such as title, description or visibility (it is public by default).
+            Publish has been completed successfully.  Do you want to open {0} Overlay to edit attributes such as title, description or visibility (it is public by default)? 
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBoxTextWorldPublishedBrowser">
+            <summary>
+            Publish has been completed successfully.  Do you want to open external browser to edit attributes such as title, description or visibility (it is public by default)? 
             </summary>
         </member>
         <member name="F:MyCommonTexts.MessageBoxTextWorldPublishFailed">
             <summary>
-            Failed to publish on {0} Workshop. Make sure {1} user is logged in.
-            </summary>
-        </member>
-        <member name="F:MyCommonTexts.MessageBoxTextModPublished">
-            <summary>
-            Publish has been completed successfully. If you have {0} Overlay enabled, a page will open and you can edit attributes such as title, description or visibility (it is public by default).
+            Failed to publish on {0} Workshop.
             </summary>
         </member>
         <member name="F:MyCommonTexts.MessageBoxTextModPublishFailed">
             <summary>
-            Failed to publish on {0} Workshop. Make sure {1} user is logged in.
+            Failed to publish on {0} Workshop.
             </summary>
         </member>
         <member name="F:MyCommonTexts.ProgressTextPublishingWorld">
@@ -10009,7 +10192,7 @@
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopBrowseWorkshop">
             <summary>
-            Open {0} Overlay with Workshop screen
+            Open {0} Workshop in the browser
             </summary>
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopCopyAndLoad">
@@ -10019,7 +10202,7 @@
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopOpenInWorkshop">
             <summary>
-            Open selected world in Workshop {0} Overlay
+            Open selected world in the browser
             </summary>
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopRefresh">
@@ -10287,6 +10470,11 @@
             {0} is offline. Please run {0} in normal mode or restart {0} if the problem persists
             </summary>
         </member>
+        <member name="F:MyCommonTexts.InventoryScreen_InstallInProgress">
+            <summary>
+            Skins installation is still in progress. Character customization will be available when the installation is completed.
+            </summary>
+        </member>
         <member name="F:MyCommonTexts.MultiplayerCompatibleVersions">
             <summary>
             Compatible versions
@@ -10379,7 +10567,7 @@
         </member>
         <member name="F:MyCommonTexts.LobbyDoesntExist">
             <summary>
-            Multiplayer session no longer exist (probably closed).
+            Multiplayer session no longer exists (probably closed).
             </summary>
         </member>
         <member name="F:MyCommonTexts.LobbyNotAllowed">
@@ -10389,7 +10577,7 @@
         </member>
         <member name="F:MyCommonTexts.LobbyFull">
             <summary>
-            Session  has reached its maximum number of players.
+            Session has reached its maximum number of players.
             </summary>
         </member>
         <member name="F:MyCommonTexts.LobbyError">
@@ -10547,6 +10735,11 @@
             The server host has left the game
             </summary>
         </member>
+        <member name="F:MyCommonTexts.MultiplayerErrorAppVersionMismatch">
+            <summary>
+            The server host denied access because of version mismatch. Please, update to most recent versions.
+            </summary>
+        </member>
         <member name="F:MyCommonTexts.NotificationRespawn">
             <summary>
             You died. Respawn in {0} seconds
@@ -10575,6 +10768,11 @@
         <member name="F:MyCommonTexts.MultiplayerError_IncorrectVersion">
             <summary>
             Server has different version of the game. Your version: {0}; Server version: {1}; You can change the branch, before launching the game, in game properties.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MultiplayerError_FamilyShareDisabled">
+            <summary>
+            Server does not allow family shared accounts to join.
             </summary>
         </member>
         <member name="F:MyCommonTexts.ShowCrosshair">
@@ -11104,7 +11302,7 @@
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopOpenModInWorkshop">
             <summary>
-            Open selected mod in Workshop {0} Overlay
+            Open selected mod in the browser.
             </summary>
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopRefreshMod">
@@ -11649,12 +11847,12 @@
         </member>
         <member name="F:MyCommonTexts.ErrorStartSessionNoUser">
             <summary>
-            You need to be logged in with a user in order to be able to start an online session.
+            You need to be logged in with an user account in order to be able to start an online session.
             </summary>
         </member>
         <member name="F:MyCommonTexts.ErrorJoinSessionNoUser">
             <summary>
-            You need to be logged in with a user in order to be able to join an online session.
+            You need to be logged in with an user account in order to be able to join an online session.
             </summary>
         </member>
         <member name="F:MyCommonTexts.Description">
@@ -11720,11 +11918,6 @@
         <member name="F:MyCommonTexts.VoxelHandSettingScreen_HandShowGizmos">
             <summary>
             Show bounding box
-            </summary>
-        </member>
-        <member name="F:MyCommonTexts.MessageBoxTextOpenUrlOverlayNotEnabled">
-            <summary>
-            This will open {0} in your internet browser, because {1} Overlay is either disabled or failed to open. The game will keep running. Do you want to continue?
             </summary>
         </member>
         <member name="F:MyCommonTexts.NotificationRotationFormatCombined">
@@ -12818,6 +13011,11 @@
             Block limits are set to ensure good performance. Please disable this option only for experimental purposes.
             </summary>
         </member>
+        <member name="F:MyCommonTexts.MessageBoxTextBlockLimitsInMP">
+            <summary>
+            Multiplayer worlds have more strict block limits to ensure good performance. Large worlds may not fit into these limits and refuse to load. Switching back to Offline will restore original block limits and allow the world to load again. 
+            </summary>
+        </member>
         <member name="F:MyCommonTexts.ToolTipWorldSettingsBlockLimits">
             <summary>
             Use recommended block limits
@@ -12903,11 +13101,6 @@
             Are you sure you want to upload and publish selected campaign on {0} Workshop? Note that by submitting this item, you agree to the workshop terms of service (see {1}).
             </summary>
         </member>
-        <member name="F:MyCommonTexts.MessageBoxTextCampaignPublished">
-            <summary>
-            Publish has been completed successfully. If you have {0} Overlay enabled, a page will open and you can edit attributes such as title, description or visibility (it is public by default).
-            </summary>
-        </member>
         <member name="F:MyCommonTexts.ScreenDebugAdminMenu_EntityName">
             <summary>
             Entity Name: 
@@ -12928,14 +13121,14 @@
             Game may break because Experimental Mode is enabled. It contains many experimental, unofficial and not fully developed  features. These were the features that we added to the game throughout its Early Access development, but are  now not considered to be an official part of the game. However, we don't want to remove them from the game because many  players are used to them. Therefore by default, you are in safe mode with only selected features and limits. Experimental mode was introduced because we want to guarantee flawless gameplay, but we can only do this if we  control the boundaries. Mods, unsafe settings, or unofficial features are out of range of what we can guarantee.
             </summary>
         </member>
-        <member name="F:MyCommonTexts.General_SteamOffline">
+        <member name="F:MyCommonTexts.General_InstallInProgress">
             <summary>
-            Steam is offline or is running in offline mode. In this mode features using online services like multiplayer,  drop pods with character skins, Steam inventory and others don't work. There might also be issues with your DLC content using online verification.
+            Skins installation is still in progress. Missing skin textures may render incorrectly.
             </summary>
         </member>
-        <member name="F:MyCommonTexts.Performance_LowSimulationQuality">
+        <member name="F:MyCommonTexts.General_SteamOffline">
             <summary>
-            Reduced quality of deformations and voxel changes because of adaptive simulation quality
+            {0} is offline or is running in offline mode. In this mode features using online services like multiplayer,  drop pods with character skins, {0} inventory and others don't work. There might also be issues with your DLC content using online verification.
             </summary>
         </member>
         <member name="F:MyCommonTexts.Performance_LowOnMemory">
@@ -13358,14 +13551,9 @@
             View details
             </summary>
         </member>
-        <member name="F:MyCommonTexts.ToolTipInventoryBrowseItems">
-            <summary>
-            Open {0} Overlay with Items screen
-            </summary>
-        </member>
         <member name="F:MyCommonTexts.ToolTipInventoryOpenInStore">
             <summary>
-            Open selected world in Workshop {0} Overlay
+            Open selected world in the browser
             </summary>
         </member>
         <member name="F:MyCommonTexts.ToolTipInventoryViewDetails">
@@ -14186,17 +14374,17 @@
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopBrowseWorkshop_Steam">
             <summary>
-            Open {0} Overlay with Workshop screen
+            Open Workshop screen in the browser
             </summary>
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopOpenInWorkshop_Steam">
             <summary>
-            Open selected world in Workshop {0} Overlay
+            Open selected world in the browser
             </summary>
         </member>
         <member name="F:MyCommonTexts.ToolTipWorkshopOpenModInWorkshop_Steam">
             <summary>
-            Open selected mod in Workshop {0} Overlay
+            Open selected mod in the browser
             </summary>
         </member>
         <member name="F:MyCommonTexts.Faction_PlayerApplied">
@@ -14346,7 +14534,7 @@
         </member>
         <member name="F:MyCommonTexts.AudioSettings_EnableDoppler">
             <summary>
-            Enable doppler
+            Enable doppler effect
             </summary>
         </member>
         <member name="F:MyCommonTexts.ToolTipAudioOptionsEnableDoppler">
@@ -14401,7 +14589,7 @@
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningCombination">
             <summary>
-            Press Shift + {0} for more info
+            Shift + {0} for more info
             </summary>
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningHeading_Connection">
@@ -14419,14 +14607,14 @@
             SCENE TOO COMPLEX
             </summary>
         </member>
-        <member name="F:MyCommonTexts.PerformanceWarningHeading_LowSimulationQuality">
-            <summary>
-            LOW SIMULATION QUALITY
-            </summary>
-        </member>
         <member name="F:MyCommonTexts.PerformanceWarningHeading_UnsafeGrids">
             <summary>
             UNSAFE GRIDS
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.PerformanceWarningHeading_InstallInProgress">
+            <summary>
+            INSTALL IN PROGRESS
             </summary>
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningHeading_ExperimentalMode">
@@ -14481,7 +14669,7 @@
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningIssuesServer_Simspeed">
             <summary>
-            Scene is too complex. Remove some grids or change trash removal settings
+            Scene is too complex. Remove some grids or change trash removal settings. Quality of simulation, deformations and voxel changes will be reduced to improve performance.
             </summary>
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningIssuesServer_PoorConnection">
@@ -14494,14 +14682,14 @@
             Experimental
             </summary>
         </member>
-        <member name="F:MyCommonTexts.GeneralWarningIssues_SteamOffline">
+        <member name="F:MyCommonTexts.GeneralWarningIssues_InstallInProgress">
             <summary>
-            Steam offline
+            Install in Progress
             </summary>
         </member>
-        <member name="F:MyCommonTexts.PerformanceWarningIssues_LowSimulationQuality">
+        <member name="F:MyCommonTexts.GeneralWarningIssues_SteamOffline">
             <summary>
-            Simulation quality
+            {0} offline
             </summary>
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningIssues_LowOnMemory">
@@ -14656,7 +14844,7 @@
         </member>
         <member name="F:MyCommonTexts.HelpScreen_HomeSteamOverlay">
             <summary>
-            Open in {0}
+            Open in the browser
             </summary>
         </member>
         <member name="F:MyCommonTexts.HelpScreen_Welcome">
@@ -14684,6 +14872,41 @@
             Support Links
             </summary>
         </member>
+        <member name="F:MyCommonTexts.HelpScreen_ReportIssue">
+            <summary>
+            Report Issue
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_ReportIssue_Description">
+            <summary>
+            Fill in the text box bellow to send us a report about a problem you might be having, your game logs will be sent to us along with your message. Provide as much detail as possible:
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_ReportIssue_Email">
+            <summary>
+            If you'd feel comfortable being contacted about this issue also provide your email address:
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_ReportIssue_SendReport">
+            <summary>
+            Send Report
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_ReportIssue_WaitForSending">
+            <summary>
+            Uploading your report, please stand by.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_ReportIssue_ThanksForSendingCaption">
+            <summary>
+            Thank you for sending your report.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_ReportIssue_ThanksForSending">
+            <summary>
+            We'll try to address it as soon as possible.
+            </summary>
+        </member>
         <member name="F:MyCommonTexts.HelpScreen_SupportContact">
             <summary>
             Support@KeenSWH.com
@@ -14707,6 +14930,11 @@
         <member name="F:MyCommonTexts.ScreenCaptionWelcomeScreen">
             <summary>
             Welcome Engineer!
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ScreenCaptionReportIssueScreen">
+            <summary>
+            Report an Issue
             </summary>
         </member>
         <member name="F:MyCommonTexts.ScreenGraphicsOptions_PostProcessing">
@@ -14811,7 +15039,7 @@
         </member>
         <member name="F:MyCommonTexts.Blueprints_DeleteTooltipDisabled">
             <summary>
-            You cannot delete blueprints you subscribed to. You can unsubcribe through the workshop.
+            You cannot delete blueprints you subscribed to. You can unsubscribe through the workshop.
             </summary>
         </member>
         <member name="F:MyCommonTexts.Blueprints_OkTooltipDisabled">
@@ -15164,6 +15392,16 @@
             Saved world is in Experimental Mode. If you want to load it, turn on Experimental mode in Game Options.
             </summary>
         </member>
+        <member name="F:MyCommonTexts.SaveGameErrorExperimentalFeatures">
+            <summary>
+            This world contains settings incompatible with currect platform. It can not be loaded.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.SaveGameErrorOverBlockLimits">
+            <summary>
+            Saved world exceeds safe block limits and could not be loaded.
+            </summary>
+        </member>
         <member name="F:MyCommonTexts.MultiplayerWarningPing">
             <summary>
             Your connection to server has very high latency. Do you want to experience severe rubber banding?
@@ -15486,12 +15724,12 @@
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_DeleteEnt">
             <summary>
-            Delete selected entity (Shortcut: Delete )
+            Delete selected entity
             </summary>
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_DeselectEnt">
             <summary>
-            Deselect selected entity (Shortcut: Ctrl+D )
+            Deselect selected entity
             </summary>
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_DisableTransform">
@@ -15516,7 +15754,7 @@
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_Rename1">
             <summary>
-            Rename selected entity (Avoid renaming wapoints, waypoints needs to start with "Waypoint_")
+            Rename selected entity
             </summary>
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_Rename2">
@@ -15546,7 +15784,7 @@
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_SpawnEnt">
             <summary>
-            Spawn new waypoint (Shortcut: N )
+            Spawn new waypoint
             </summary>
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_TransformTools">
@@ -15571,7 +15809,7 @@
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_TriggerSnap">
             <summary>
-            Snap trigger to selected netity or camera (if no entity is selected)
+            Snap trigger to selected entity or camera (if no entity is selected)
             </summary>
         </member>
         <member name="F:MyCommonTexts.ScriptingTools_Tooltip_WorldCoords">
@@ -15787,6 +16025,116 @@
         <member name="F:MyCommonTexts.ChatCommand_AvailableControls">
             <summary>
             Available controls:
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Smite">
+            <summary>
+            Smite
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_HelpSimple_Smite">
+            <summary>
+            Create lightning
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Help_Smite">
+            <summary>
+            Creates a lightning bolt to what you're looking at.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_RWeather">
+            <summary>
+            RWeather
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_HelpSimple_RWeather">
+            <summary>
+            Create random weather
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Help_RWeather">
+            <summary>
+            Creates a random weather at your camera's postiion.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_RandomWeather">
+            <summary>
+            Created a random weather at your position.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_WeatherIncoming">
+            <summary>
+            A random weather event is already incoming.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Weatherlist">
+            <summary>
+            Weatherlist
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_HelpSimple_Weatherlist">
+            <summary>
+            List all weathers
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Help_Weatherlist">
+            <summary>
+            Lists all available weathers.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_AvailableWeathers">
+            <summary>
+            Available Weather Types: 
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Weather">
+            <summary>
+            Weather
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_CurrentWeather">
+            <summary>
+            Current Experienced Weather: 
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_NoWeather">
+            <summary>
+            You are not experiencing any weather.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_NoPlanet">
+            <summary>
+            No nearby planets found
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_NoWeatherSystem">
+            <summary>
+            Your closest planet does not have a weather system
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_SetWeather">
+            <summary>
+            You're now experiencing '{0}' at your position
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_NoWeatherFound">
+            <summary>
+            No weather of type '{0}' found
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Texts_RemovedWeather">
+            <summary>
+            Removed the weather at your position
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_HelpSimple_Weather">
+            <summary>
+            Get or Set Weather
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_Help_Weather">
+            <summary>
+            Gets or sets weather at your current position. Add a weather name to set weather.
             </summary>
         </member>
         <member name="F:MyCommonTexts.ChatCommand_HelpSimple_F">
@@ -16103,6 +16451,11 @@
             Requires {0} DLC
             </summary>
         </member>
+        <member name="F:MyCommonTexts.ScenarioRequiresDlc">
+            <summary>
+            This scenario requires {0} DLC Open DLC in store?
+            </summary>
+        </member>
         <member name="F:MyCommonTexts.MessageBoxTextMissingDLCWhenPasting">
             <summary>
             Pasted ship contains some blocks that are part of a DLC you don't own.  These blocks will not be pasted, which could possibly cause the ship to split.
@@ -16120,12 +16473,12 @@
         </member>
         <member name="F:MyCommonTexts.RequiresGameInventoryItem">
             <summary>
-            Requires {0} Steam Inventory Item
+            Requires {0} {1} Inventory Item
             </summary>
         </member>
         <member name="F:MyCommonTexts.RequiresAnyGameInventoryItem">
             <summary>
-            Requires Steam Inventory Item
+            Requires {0} Inventory Item
             </summary>
         </member>
         <member name="F:MyCommonTexts.ShowInGameInventoryStore">
@@ -16150,12 +16503,12 @@
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningHeading_SteamOffline">
             <summary>
-            STEAM OFFLINE
+            {0} OFFLINE
             </summary>
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningIssuesPaidContent">
             <summary>
-            You are using a premium content, {0}. Purchase [{1} here] to get richer game experience.
+            You are using a premium content, {0}. Purchase from the shop to get richer game experience.
             </summary>
         </member>
         <member name="F:MyCommonTexts.PerformanceWarningTitle_PaidContent">
@@ -16268,6 +16621,16 @@
             Play emote Point Right
             </summary>
         </member>
+        <member name="F:MyCommonTexts.ChatCommand_HelpSimple_Cold">
+            <summary>
+            Play emote Cold
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ChatCommand_HelpSimple_CheckWrist">
+            <summary>
+            Play emote CheckWrist
+            </summary>
+        </member>
         <member name="F:MyCommonTexts.ApplyColor">
             <summary>
             Use color to repaint
@@ -16340,7 +16703,7 @@
         </member>
         <member name="F:MyCommonTexts.SimpleNewGame_Start">
             <summary>
-            Open
+            Start
             </summary>
         </member>
         <member name="F:MyCommonTexts.SimpleNewGame_Creative_Description">
@@ -16463,9 +16826,24 @@
             Open Contract screen
             </summary>
         </member>
-        <member name="F:MyCommonTexts.Datapad_InventoryItem_TTIP">
+        <member name="F:MyCommonTexts.Datapad_InventoryItem_TTIP_Keyboard">
             <summary>
             Right - click to read
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Datapad_InventoryItem_TTIP_Gamepad">
+            <summary>
+            {GAMEPAD_CONTROL:GUI:BUTTON_Y} to read
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Consumable_InventoryItem_TTIP_Keyboard">
+            <summary>
+            Right - click to consume
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Consumable_InventoryItem_TTIP_Gamepad">
+            <summary>
+            {GAMEPAD_CONTROL:GUI:BUTTON_Y} to consume
             </summary>
         </member>
         <member name="F:MyCommonTexts.ScreenOptionsGame_ResetGoodbotHints">
@@ -16556,6 +16934,501 @@
         <member name="F:MyCommonTexts.Gamepad_GScreen_Hint">
             <summary>
             Select block and action with {0} and {1}  Press {2} to remove action from this slot
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.OffensiveTextTooltip">
+            <summary>
+            Entered offensive word: {0}
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBoxCaptionUser">
+            <summary>
+            Information
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBoxTextNoUser">
+            <summary>
+            There is no user logged in.      Please, open Xbox Menu and login with your user account to continue.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBoxCaptionCriticalMemory">
+            <summary>
+            Critically low memory
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBoxTextCriticalMemory">
+            <summary>
+            Game is running critically low on memory.  Please, cleanup your world to continue playing.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Button">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Checkbox">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Combobox">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Slider">
+            <summary>
+            {GAMEPAD:DPAD_LEFTRIGHT} Change value
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_SearchBox">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Table">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Textbox">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.GamepadScheme">
+            <summary>
+            Controller scheme
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.GamepadScheme_1">
+            <summary>
+            Flight alternative
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.GamepadScheme_2">
+            <summary>
+            Classic
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.GamepadScheme_Default">
+            <summary>
+            Default
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ToolTipOptionsControls_GamepadScheme">
+            <summary>
+            Select active controller scheme.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_TableSort">
+            <summary>
+               {CONTROL:GUI:LEFT_STICK_BUTTON} Sort By: {0}
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.InvertGamepadYChar">
+            <summary>
+            Invert controller Y (Character)
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.InvertGamepadYVehicle">
+            <summary>
+            Invert controller Y (Jetpack/Vehicles)
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_ContentButton">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_help_ControlList">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Grid">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Listbox">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_MultiLineTextbox">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBox_Help_OK">
+            <summary>
+            {CONTROL:GUI:ACCEPT} {0}
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBox_Help_YesNo">
+            <summary>
+            {CONTROL:GUI:ACCEPT} {0}   {CONTROL:GUI:CANCEL} {1}
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBox_Help_YesNoCancel">
+            <summary>
+            {CONTROL:GUI:ACCEPT} {0}   {CONTROL:GUI:BUTTON_Y} {1}   {CONTROL:GUI:CANCEL} {2}
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.XBoxPermission_MultiplayerError">
+            <summary>
+            Connection problem
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_Back">
+            <summary>
+            {CONTROL:GUI:CANCEL} Back
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.PerformanceWarningCombinationGamepad">
+            <summary>
+            {0} for more info
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.MessageBox_LoadingUserData">
+            <summary>
+            Loading user data
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.SimpleNewGame_Open">
+            <summary>
+            Open
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.DialogAmount_Help_Screen">
+            <summary>
+            {CONTROL:GUI:BUTTON_X} OK   {CONTROL:GUI:CANCEL} Cancel
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Inventory">
+            <summary>
+            Inventory
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Production">
+            <summary>
+            Production
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_GeneralUI">
+            <summary>
+            General Controls
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Inventory_MoveItem">
+            <summary>
+            Move item
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Inventory_Split">
+            <summary>
+            Hold to split stack
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Inventory_Transfer">
+            <summary>
+            Transfer all
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Inventory_Transfer10">
+            <summary>
+            Transfer 10
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Inventory_Transfer100">
+            <summary>
+            Transfer 100
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Inventory_Transfer1000">
+            <summary>
+            Transfer 1000
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Inventory_UseItem">
+            <summary>
+            Use item
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Production_Dequeue">
+            <summary>
+            Dequeue
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Production_MoveItem">
+            <summary>
+            Move queued item
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Production_Queue1">
+            <summary>
+            Queue 1
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Production_Queue10">
+            <summary>
+            Queue 10
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Production_Queue100">
+            <summary>
+            Queue 100
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Production_Queue1000">
+            <summary>
+            Queue 1000
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Numeric">
+            <summary>
+            Numeric:
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Numeric_Move1">
+            <summary>
+            Change value by 1
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Numeric_Move10">
+            <summary>
+            Change value by 10
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Numeric_Move100">
+            <summary>
+            Change value by 100
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Numeric_Move1000">
+            <summary>
+            Change value by 1000
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Slider">
+            <summary>
+            Slider:
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Slider_Move1">
+            <summary>
+            Change value at speed 1
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Slider_Move10">
+            <summary>
+            Change value at speed 10
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Slider_Move100">
+            <summary>
+            Change value at speed 100
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Slider_MoveHalf">
+            <summary>
+            Change value to half
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox">
+            <summary>
+            Listbox:
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox_AddMove">
+            <summary>
+            Add move
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox_DeSelectAll">
+            <summary>
+            De/select all
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox_Move">
+            <summary>
+            Move
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox_SelectCurrent">
+            <summary>
+            Select current
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox_SelectMove">
+            <summary>
+            Select move
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox_SelectRange">
+            <summary>
+            Select range
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox_ToggleCurrent">
+            <summary>
+            Toggle current
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Listbox_ToggleMove">
+            <summary>
+            Toggle move
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Crosshair_AlwaysHidden">
+            <summary>
+            Always hidden
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Crosshair_AlwaysVisible">
+            <summary>
+            Always visible
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Crosshair_VisibleWithHUD">
+            <summary>
+            Visible with HUD
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ControllerErrorCaption">
+            <summary>
+            Controller Error
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ControllerErrorText">
+            <summary>
+            Please reconnect the controller.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ResearchGraph_Help_Control">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_TabControl_Left">
+            <summary>
+            {CONTROL:GUI:SWITCH_GUI_LEFT}
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_TabControl_Right">
+            <summary>
+            {CONTROL:GUI:SWITCH_GUI_RIGHT}
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ScreenTextPanel_GamepadHelp">
+            <summary>
+            {CONTROL:GUI:BUTTON_X} Ok   {CONTROL:GUI:BUTTON_B} Back
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ScreenTextPanel_GamepadHelp_Xbox">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select   {CONTROL:GUI:BUTTON_X} Ok   {CONTROL:GUI:BUTTON_B} Back
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ResearchGraph_BuildPlanner_Control">
+            <summary>
+            {CONTROL:GUI:ACCEPT} Select   {CONTROL:GUI:ACTION1} Add to Build Planner   {CONTROL:GUI:ACTION2} Remove from Build Planner
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.CloudQuota_CloudUsage">
+            <summary>
+            Cloud usage
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.Gamepad_Help_TableSort_Empty">
+            <summary>
+               {CONTROL:GUI:LEFT_STICK_BUTTON} Sort
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.DialogTextIncompatibleWorldVersionWarning">
+            <summary>
+            This world has been created in a newer version of the game, for example in a different branch or in public test version.  The game may become unstable when loading this world. Do you want to continue?
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.PerformanceWarningAreaBlocksDescriptionSimple">
+            <summary>
+            Too many blocks in the world. Remove some grids.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.PerformanceWarningAreaConveyorDescriptionSimple">
+            <summary>
+            Too many conveyors. Remove some grids.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.PerformanceWarningAreaGridDescriptionSimple">
+            <summary>
+            Too many grids. Remove some grids.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.PerformanceWarningIssuesServer_Simspeed_Simple">
+            <summary>
+            Scene is too complex. Remove some grids. Quality of simulation, deformations and voxel changes will be reduced to improve performance.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.ScreenDebugAdminMenu_RevertBoulders">
+            <summary>
+            Revert Boulders
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_PossibilitiesWithinTheGameModes">
+            <summary>
+            Possibilities Within The Game Modes
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_DrillingRefiningAssemblingSurvival">
+            <summary>
+            Drilling, Refining and Assembling (Survival)
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_BuildingYour1stShipCreative">
+            <summary>
+            Building Your 1st Ship (Creative)
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_BuildingYour1stGroundVehicle">
+            <summary>
+            Building Your 1st Ground Vehicle (Creative)
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_OtherAdviceClosingThoughts">
+            <summary>
+            Other Advice and Closing Thoughts
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_Introduction">
+            <summary>
+            Introduction
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_SteamWorkshopAndBlueprints">
+            <summary>
+            Steam Workshop and Blueprints
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_HelloEngineer">
+            <summary>
+            Hello Engineer!              We recommend that you view these tutorial links, which contain useful information on how to get started in Space Engineers!
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_AccessHelpScreen">
+            <summary>
+            You can always access these tutorials from the Help screen.
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.HelpScreen_DontShowAgain">
+            <summary>
+            Dont show again
+            </summary>
+        </member>
+        <member name="F:MyCommonTexts.GridsRemovedWhilePasting">
+            <summary>
+            After removal of all DLC blocks you do not own and that are not allowed by server, no other blocks remained.
             </summary>
         </member>
     </members>

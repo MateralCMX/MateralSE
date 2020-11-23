@@ -235,6 +235,11 @@
             Implements screen for ATM Block UI
             </summary>
         </member>
+        <member name="M:SpaceEngineers.Game.GUI.MyGuiScreenMainMenu.CreateRightSection">
+            <summary>
+            Creates news and banners
+            </summary>
+        </member>
         <member name="M:SpaceEngineers.Game.GUI.MyGuiScreenOptionsGraphics.ReadSettingsFromControls(Sandbox.Engine.Platform.VideoMode.MyGraphicsSettings@)">
             <returns>Bool indicating a game restart is required</returns>
         </member>
@@ -741,18 +746,6 @@
             <summary>
             Virtualmass weight
             </summary>
-        </member>
-        <member name="M:SpaceEngineers.Game.Weapons.Guns.Barrels.MyLargeGatlingBarrel.ShowReloadNotification(System.Int32)">
-            <summary>
-            Will show the reload notification for the specified duration.
-            </summary>
-            <param name="duration">The time in MS it should show reloading.</param>
-        </member>
-        <member name="M:SpaceEngineers.Game.Weapons.Guns.Barrels.MyLargeMissileBarrel.ShowReloadNotification(System.Int32)">
-            <summary>
-            Will show the reload notification for the specified duration.
-            </summary>
-            <param name="duration">The time in MS it should show reloading.</param>
         </member>
         <member name="F:SpaceEngineers.Game.World.MySpaceRespawnComponent.SpawnInfo.IdentityId">
             <summary>

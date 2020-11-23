@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MateralSE", "MateralSE\Mate
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MateralSE.ConsoleApp", "MateralSE.ConsoleApp\MateralSE.ConsoleApp.csproj", "{81B5DFB4-6E0A-4213-B813-EE9EBC1CBD52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MateralSE.MyApp", "MateralSE.MyApp\MateralSE.MyApp.csproj", "{394953CC-4950-4E34-AF75-86EE770E4CDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{81B5DFB4-6E0A-4213-B813-EE9EBC1CBD52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81B5DFB4-6E0A-4213-B813-EE9EBC1CBD52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81B5DFB4-6E0A-4213-B813-EE9EBC1CBD52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{394953CC-4950-4E34-AF75-86EE770E4CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{394953CC-4950-4E34-AF75-86EE770E4CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{394953CC-4950-4E34-AF75-86EE770E4CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{394953CC-4950-4E34-AF75-86EE770E4CDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
