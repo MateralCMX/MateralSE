@@ -1,4 +1,5 @@
 ﻿using Sandbox.ModAPI.Ingame;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using VRage;
@@ -8,7 +9,7 @@ namespace MateralSE.Report.ResourceReport
 {
     public class Program : MyGridProgram
     {
-        //CustomData:主要文本面板名称1|主要文本面板名称2|
+        //CustomData:主要文本面板名称1&0|主要文本面板名称2|
         /// <summary>
         /// 矿石字典
         /// </summary>
@@ -29,8 +30,8 @@ namespace MateralSE.Report.ResourceReport
             ["Magnesium"] = new ItemDefaultModel("镁粉", 1000),
             ["Gold"] = new ItemDefaultModel("金锭", 1000),
             ["Silver"] = new ItemDefaultModel("银锭", 10000),
-            ["Platinum"] = new ItemDefaultModel("铂锭", 1000),
-            ["Uranium"] = new ItemDefaultModel("铀棒", 1000)
+            //["Platinum"] = new ItemDefaultModel("铂锭", 1000),
+            //["Uranium"] = new ItemDefaultModel("铀棒", 1000)
         };
         /// <summary>
         /// 组件字典
@@ -52,7 +53,7 @@ namespace MateralSE.Report.ResourceReport
             ["Medical"] = new ItemDefaultModel("医疗零件", 200),
             ["SolarCell"] = new ItemDefaultModel("太阳能电池板", 10000),
             ["Detector"] = new ItemDefaultModel("探测器零件", 1000),
-            ["Thrust"] = new ItemDefaultModel("推进器零件", 1000),
+            //["Thrust"] = new ItemDefaultModel("推进器零件", 1000),
             ["RadioCommunication"] = new ItemDefaultModel("无线电零件", 1000),
             ["Explosives"] = new ItemDefaultModel("爆炸物", 1000),
             ["Superconductor"] = new ItemDefaultModel("超导体", 1000),
@@ -67,7 +68,7 @@ namespace MateralSE.Report.ResourceReport
         {
             ["NATO_5p56x45mm"] = new ItemDefaultModel("5.56x45mm弹夹", 1000),
             ["NATO_25x184mm"] = new ItemDefaultModel("25X184mm子弹", 1000),
-            ["Missile200mm"] = new ItemDefaultModel("导弹", 1000)
+            //["Missile200mm"] = new ItemDefaultModel("导弹", 1000)
         };
         private InventoryModel _inventory;
         private TextSurfacesModel _mainTextSurfaces;
@@ -103,11 +104,29 @@ namespace MateralSE.Report.ResourceReport
         /// 初始化主要文本面板
         /// </summary>
         /// <param name="mainTextSurfaceNames"></param>
-        private void InitTextSurface(IEnumerable<string> mainTextSurfaceNames)
+        private void InitTextSurface(IReadOnlyCollection<string> mainTextSurfaceNames)
         {
-            List<IMyTextSurface> mainTextSurfaces = mainTextSurfaceNames.Select(lcdName => GridTerminalSystem.GetBlockWithName(lcdName) as IMyTextSurface).ToList();
-            mainTextSurfaces.Add(Me.GetSurface(0));
-            _mainTextSurfaces = new TextSurfacesModel(mainTextSurfaces);
+            var textSurfaces = new List<IMyTextSurface>();
+            foreach (string mainTextSurfaceName in mainTextSurfaceNames)
+            {
+                string[] trueNames = mainTextSurfaceName.Split('&');
+                if (trueNames.Length == 1)
+                {
+                    var textSurface = GridTerminalSystem.GetBlockWithName(trueNames[0]) as IMyTextSurface;
+                    textSurfaces.Add(textSurface);
+                }
+                else if (trueNames.Length == 2)
+                {
+                    var index = Convert.ToInt32(trueNames[1]);
+                    var textSurfaceProvider = GridTerminalSystem.GetBlockWithName(trueNames[0]) as IMyTextSurfaceProvider;
+                    if (textSurfaceProvider != null && textSurfaceProvider.SurfaceCount >= index)
+                    {
+                        textSurfaces.Add(textSurfaceProvider.GetSurface(index));
+                    }
+                }
+            }
+            textSurfaces.Add(Me.GetSurface(0));
+            _mainTextSurfaces = new TextSurfacesModel(textSurfaces);
         }
         /// <summary>
         /// 初始化物品

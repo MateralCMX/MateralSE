@@ -1,16 +1,20 @@
-﻿using Sandbox.ModAPI.Ingame;
+﻿using System;
+using Sandbox.ModAPI.Ingame;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 
 namespace MateralSE.Report.PowerReport
 {
     /// <summary>
     /// 电量报表
     /// </summary>
+    [SuppressMessage("ReSharper", "UsePatternMatching")]
     public class Program : MyGridProgram
     {
-        //CustomData:主要文本面板名称1|主要文本面板名称2|,主要电池前缀名
-        private const string _mainName = "主要电池";
+        //CustomData:主要文本面板名称1&0|主要文本面板名称2|,主要电池前缀名
+        private const string _mainName = "基地电池";
         private const string _otherName = "其他电池";
         private BatteryBlocksModel _mainBatteryBlocks;
         private BatteryBlocksModel _otherBatteryBlocks;
@@ -45,11 +49,29 @@ namespace MateralSE.Report.PowerReport
         /// 初始化主要文本面板
         /// </summary>
         /// <param name="mainTextSurfaceNames"></param>
-        private void InitTextSurface(IEnumerable<string> mainTextSurfaceNames)
+        private void InitTextSurface(IReadOnlyCollection<string> mainTextSurfaceNames)
         {
-            List<IMyTextSurface> mainTextSurfaces = mainTextSurfaceNames.Select(lcdName => GridTerminalSystem.GetBlockWithName(lcdName) as IMyTextSurface).ToList();
-            mainTextSurfaces.Add(Me.GetSurface(0));
-            _mainTextSurfaces = new TextSurfacesModel(mainTextSurfaces);
+            var textSurfaces = new List<IMyTextSurface>();
+            foreach (string mainTextSurfaceName in mainTextSurfaceNames)
+            {
+                string[] trueNames = mainTextSurfaceName.Split('&');
+                if (trueNames.Length == 1)
+                {
+                    var textSurface = GridTerminalSystem.GetBlockWithName(trueNames[0]) as IMyTextSurface;
+                    textSurfaces.Add(textSurface);
+                }
+                else if (trueNames.Length == 2)
+                {
+                    var index = Convert.ToInt32(trueNames[1]);
+                    var textSurfaceProvider = GridTerminalSystem.GetBlockWithName(trueNames[0]) as IMyTextSurfaceProvider;
+                    if (textSurfaceProvider != null && textSurfaceProvider.SurfaceCount >= index)
+                    {
+                        textSurfaces.Add(textSurfaceProvider.GetSurface(index));
+                    }
+                }
+            }
+            textSurfaces.Add(Me.GetSurface(0));
+            _mainTextSurfaces = new TextSurfacesModel(textSurfaces);
         }
         /// <summary>
         /// 初始化电池方块
