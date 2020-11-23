@@ -10,13 +10,10 @@ namespace MateralSE.MyApp.容量监测
         private float _maxVolume;
         private float _currentVolume;
         private double _volumeFraction;
-        public List<IMyTerminalBlock> TerminalBlocks { get; }
-        public VolumeDetection(List<IMyTerminalBlock> terminalBlocks)
+        public List<IMyTerminalBlock> TerminalBlocks { get; private set; }
+        public void UpdateInfo(List<IMyTerminalBlock> terminalBlocks)
         {
             TerminalBlocks = terminalBlocks;
-        }
-        public void UpdateInfo()
-        {
             _maxVolume = 0;
             _currentVolume = 0;
             foreach (IMyTerminalBlock inventoryBlock in TerminalBlocks)

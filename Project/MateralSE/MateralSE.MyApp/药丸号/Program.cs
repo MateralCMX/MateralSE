@@ -46,6 +46,7 @@ namespace MateralSE.MyApp.药丸号
         public void Main(string argument, UpdateType updateSource)
         {
             if (_resourceTextPanel == null) _resourceTextPanel = (IMyTextSurface)GridTerminalSystem.GetBlockWithName("资源统计面板");
+            _resourceTextPanel.WriteText("12345");
             var terminalBlocks = new List<IMyTerminalBlock>();
             GridTerminalSystem.GetBlocks(terminalBlocks);
             terminalBlocks = terminalBlocks.Where(m => m.HasInventory).ToList();
@@ -63,12 +64,11 @@ namespace MateralSE.MyApp.药丸号
             _electricPowerDetection.Init(baseBatteryBlocks, otherBatteryBlocks);
             var cargoContainers = new List<IMyTerminalBlock>();
             GridTerminalSystem.GetBlocksOfType<IMyCargoContainer>(cargoContainers);
-            if (_volumeDetection == null) _volumeDetection = new VolumeDetection(cargoContainers);
-            _volumeDetection.UpdateInfo();
+            if (_volumeDetection == null) _volumeDetection = new VolumeDetection();
+            _volumeDetection.UpdateInfo(cargoContainers);
             lcdText = _electricPowerDetection.GetText();
             lcdText += _volumeDetection.GetText();
             _electricPowerTextPanel.WriteText(lcdText);
-            _electricPowerDetection.AutomaticManagement();
         }
     }
 }

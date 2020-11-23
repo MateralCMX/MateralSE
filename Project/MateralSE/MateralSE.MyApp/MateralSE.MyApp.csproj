@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="容量监测\VolumeDetection.cs" />
+    <Compile Include="求生车\Program.cs" />
     <Compile Include="电力监测\ElectricPowerDetection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="药丸号\Program.cs" />
     <Compile Include="太阳能\AutomaticTrackingPlatform.cs" />
     <Compile Include="Rename.cs" />
+    <Compile Include="芦苇号\Program.cs" />
+    <Compile Include="野驴号\Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

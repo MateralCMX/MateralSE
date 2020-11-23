@@ -61,7 +61,7 @@ namespace MateralSE.MyApp.资源监测
         private readonly int _alertValue;
         public string TypeID { get; }
         public float Inventory { get; set; }
-        public bool IsAlarm => Inventory <= _alertValue;
+        public bool IsAlarm => Inventory < _alertValue;
         public bool IsSeriousAlarm => Inventory / _alertValue < 0.25;
         public string AlarmText
         {

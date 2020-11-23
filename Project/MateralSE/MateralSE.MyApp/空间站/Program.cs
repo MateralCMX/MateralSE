@@ -76,8 +76,8 @@ namespace MateralSE.MyApp.空间站
             _electricPowerDetection.AutomaticManagement();
             terminalBlocks = new List<IMyTerminalBlock>();
             GridTerminalSystem.GetBlocksOfType<IMyCargoContainer>(terminalBlocks);
-            if (_volumeDetection == null) _volumeDetection = new VolumeDetection(terminalBlocks);
-            _volumeDetection.UpdateInfo();
+            if (_volumeDetection == null) _volumeDetection = new VolumeDetection();
+            _volumeDetection.UpdateInfo(terminalBlocks);
             lcdText = _electricPowerDetection.GetText();
             lcdText += _volumeDetection.GetText();
             _upTextPanel.WriteText(lcdText);
