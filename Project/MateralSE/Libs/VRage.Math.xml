@@ -458,7 +458,7 @@
         </member>
         <member name="T:VRageMath.BoundingBox2D">
             <summary>
-            Defines an axis-aligned box-shaped 3D volume.
+            Defines an axis-aligned box-shaped 2D volume.
             </summary>
         </member>
         <member name="F:VRageMath.BoundingBox2D.CornerCount">
@@ -4328,6 +4328,12 @@
             Such matrix consist solely of rotations, shearing, mirroring and scaling. It can be orthogonalized to create an orthogonal rotation matrix.
             </summary>
         </member>
+        <member name="M:VRageMath.Matrix.SetFrom(VRageMath.MatrixD@)">
+            <summary>
+            Set this ma
+            </summary>
+            <param name="m"></param>
+        </member>
         <member name="T:VRageMath.Matrix3x3">
             <summary>
             Defines a matrix.
@@ -7395,6 +7401,16 @@
             When the range is an angle this method changes it to the sines of the angle.
             
             The angle is expected to be in degrees.
+        </member>
+        <member name="F:VRageMath.Spatial.MyClusterTree.EntityAdded">
+            <summary>
+            On Entity Added, entity ID, cluster ID
+            </summary>
+        </member>
+        <member name="F:VRageMath.Spatial.MyClusterTree.EntityRemoved">
+            <summary>
+            On Entity Removed, entity ID, cluster ID
+            </summary>
         </member>
         <member name="M:VRageMath.Spatial.MyClusterTree.IMyActivationHandler.Activate(System.Object,System.UInt64)">
             <summary>

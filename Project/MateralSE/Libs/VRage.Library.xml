@@ -402,8 +402,55 @@
             Trims end of array which contains default elements.
             </summary>
         </member>
+        <member name="T:VRage.Library.Collections.__helper_namespace.ITypeList">
+            <summary>
+            Interface describing a generic type list.
+            
+            We use these as indices for the type dictionary.
+            </summary>
+        </member>
+        <member name="T:VRage.Library.Collections.__helper_namespace.TypeList">
+            <summary>
+            Basic type list implementation.
+            </summary>
+        </member>
+        <member name="T:VRage.Library.Collections.__helper_namespace.TypeListWith">
+            <summary>
+            Type list with a single element added.
+            </summary>
+        </member>
+        <member name="T:VRage.Library.Collections.__helper_namespace.TypeListWithout">
+            <summary>
+            Type list with a single element added.
+            </summary>
+        </member>
+        <member name="T:VRage.Library.Collections.MyComponentContainerTemplate`1">
+            <summary>
+            Template for an indexed component container.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:VRage.Library.Collections.ComponentIndex">
+            <summary>
+            Index for a component container.
+            </summary>
+        </member>
+        <member name="T:VRage.Library.Collections.IndexHost">
+            <summary>
+            Host of static references to indexers.
+            </summary>
+        </member>
+        <member name="T:VRage.Library.Collections.MyIndexedComponentContainer`1">
+            <summary>
+            Component container that stores the components in a list and uses a shared index for quick access.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
         <member name="M:VRage.Library.Collections.MyIndexedComponentContainer`1.#ctor(VRage.Library.Collections.MyComponentContainerTemplate{`0})">
+            <summary>
             Create a component from a template.
+            </summary>
+            <param name="template">template</param>
         </member>
         <member name="T:VRage.Library.Collections.MyIndexList`1">
             <summary>
@@ -484,7 +531,30 @@
             <summary>
             Provide access to the array used internally to store the list items.
             </summary>
-            <remarks>If elements of the array are modified the user should call <see cref="M:VRage.Library.Collections.MyList`1.Touch"/> to inform of that change.</remarks>
+            <remarks>
+            <para>If elements of the array are modified the user should call <see cref="M:VRage.Library.Collections.MyList`1.Touch"/> to inform of that change.</para>
+            <para>Any addition/insertion to the list may re-allocate the internal array, thus invalidating the instance returned by this method.</para>
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:VRage.Library.Collections.MyList`1.AsSpan">
+            <summary>
+            Provide access to the array used internally to store the list items.
+            </summary>
+            <remarks>
+            <para>If elements of the array are modified the user should call <see cref="M:VRage.Library.Collections.MyList`1.Touch"/> to inform of that change.</para>
+            <para>Any addition/insertion to the list may re-allocate the internal array, thus invalidating the instance returned by this method.</para>
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:VRage.Library.Collections.MyList`1.Slice(System.Int32,System.Int32)">
+            <summary>
+            Provide access to a slice of the array used internally to store the list items.
+            </summary>
+            <remarks>
+            <para>If elements of the array are modified the user should call <see cref="M:VRage.Library.Collections.MyList`1.Touch"/> to inform of that change.</para>
+            <para>Any addition/insertion to the list may re-allocate the internal array, thus invalidating the instance returned by this method.</para>
+            </remarks>
             <returns></returns>
         </member>
         <member name="M:VRage.Library.Collections.MyList`1.System#Collections#Generic#IEnumerable{T}#GetEnumerator">
@@ -519,6 +589,16 @@
             MultiKeyIndex supports value lookups using multiple different keys.
             The keys must derivable from value, if it's not the case use MultiKeyDictionary.
             </summary>
+        </member>
+        <member name="T:VRage.Library.Collections.PooledMemory`1">
+            <summary>
+            Represents a type-safe segment of memory that is borrowed from a pool.
+            </summary>
+            <seealso cref="T:VRage.Library.Collections.PoolManager"/>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:VRage.Library.Collections.PooledMemory`1.ToString">
+            <inheritdoc />
         </member>
         <member name="T:VRage.Library.Collections.PoolManager">
             <summary>
@@ -565,10 +645,53 @@
             Note that if no pool has been allocated for the object type this call does nothing.
             
             If this type of behaviour is undesirable one may preallocate the pool <see cref="M:VRage.Library.Collections.PoolManager.Preallocate``1(System.Int32)"/>.
-            In this case a preallocation of size 0 ensures the pool exists but does not allocate any instances.
+            In this case a pre-allocation of size 0 ensures the pool exists but does not allocate any instances.
             </summary>
             <typeparam name="TPooled">The type of the object to return to the pool.</typeparam>
             <param name="obj">An object to return to a pool.</param>
+        </member>
+        <member name="M:VRage.Library.Collections.PoolManager.BorrowArray``1(System.Int32,``0[]@)">
+            <summary>
+            Borrow an array.
+            </summary>
+            <remarks>The array can be returned using the provided handle or <see cref="M:VRage.Library.Collections.PoolManager.ReturnBorrowedArray``1(``0[]@)"/></remarks>
+            <typeparam name="TElement">The array element type.</typeparam>
+            <param name="size">The minimum size of the requested array, this can be smaller than the actual length.</param>
+            <param name="array">The borrowed array, the length of it may be longer than the requested size.</param>
+            <returns>A handle that can be used to return the array once it's use is no longer required.</returns>
+        </member>
+        <member name="M:VRage.Library.Collections.PoolManager.ReturnBorrowedArray``1(``0[]@)">
+            <summary>
+            Return an array that was borrowed via <see cref="M:VRage.Library.Collections.PoolManager.BorrowArray``1(System.Int32,``0[]@)"/>
+            </summary>
+            <typeparam name="TElement">The array element type.</typeparam>
+            <param name="array"></param>
+        </member>
+        <member name="M:VRage.Library.Collections.PoolManager.BorrowMemory``1(System.Int32,VRage.Library.Collections.PooledMemory{``0}@)">
+            <summary>
+            Borrow a memory segment.
+            </summary>
+            <remarks>The memory can be returned using the provided handle or <see cref="M:VRage.Library.Collections.PoolManager.ReturnBorrowedArray``1(``0[]@)"/></remarks>
+            <typeparam name="TElement">The memory element type.</typeparam>
+            <param name="size">The minimum size of the requested memory, this can be smaller than the actual length.</param>
+            <param name="memory">The borrowed memory, the length of it may be longer than the requested size.</param>
+            <returns>A handle that can be used to return the memory once it's use is no longer required.</returns>
+        </member>
+        <member name="M:VRage.Library.Collections.PoolManager.ReturnBorrowedMemory``1(VRage.Library.Collections.PooledMemory{``0}@)">
+            <summary>
+            Return a memory segment that was borrowed via <see cref="M:VRage.Library.Collections.PoolManager.BorrowMemory``1(System.Int32,VRage.Library.Collections.PooledMemory{``0}@)"/>
+            </summary>
+            <typeparam name="TElement">The memory element type.</typeparam>
+            <param name="memory"></param>
+        </member>
+        <member name="M:VRage.Library.Collections.PoolManager.BorrowSpan``1(System.Int32,System.Span{``0}@)">
+            <summary>
+            Borrow a span of memory containing elements of the requested type.
+            </summary>
+            <typeparam name="TElement">The array element type.</typeparam>
+            <param name="size">The length of the requested span.</param>
+            <param name="span">The borrowed span.</param>
+            <returns>A token used to return the borrowed memory span.</returns>
         </member>
         <member name="T:VRage.Library.Collections.SmallBitField">
             <summary>
@@ -710,6 +833,12 @@
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
+        </member>
+        <member name="T:VRage.Library.Parallelization.DataGuard">
+            <summary>
+            This utility construct reports incorrect data access/synchronization
+            Correct access is only asserted, not ensured in any way. No locking or spinning is performed in order to achieve any kind syncing!
+            </summary>
         </member>
         <member name="T:VRage.Library.Threading.ProcessUtil">
             <summary>
@@ -995,6 +1124,27 @@
             <summary>
             Class distributing updates on large amount of objects in configurable intervals. 
             </summary>
+        </member>
+        <member name="M:VRage.Collections.MyDistributedUpdater`2.System#Collections#Generic#IEnumerable{TElement}#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:VRage.Collections.MyDistributedUpdater`2.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:VRage.Collections.MyDistributedUpdater`2.Enumerator.MoveNext">
+            <inheritdoc />
+        </member>
+        <member name="M:VRage.Collections.MyDistributedUpdater`2.Enumerator.Reset">
+            <inheritdoc />
+        </member>
+        <member name="P:VRage.Collections.MyDistributedUpdater`2.Enumerator.Current">
+            <inheritdoc />
+        </member>
+        <member name="P:VRage.Collections.MyDistributedUpdater`2.Enumerator.System#Collections#IEnumerator#Current">
+            <inheritdoc />
+        </member>
+        <member name="M:VRage.Collections.MyDistributedUpdater`2.Enumerator.Dispose">
+            <inheritdoc />
         </member>
         <member name="T:VRage.Collections.MyIntervalList">
             <summary>
@@ -1996,6 +2146,18 @@
             <param name="text"></param>
             <returns></returns>
         </member>
+        <member name="M:VRage.Utils.MyStringUtils.UpdateControlsFromNotificationFriendly(System.Text.StringBuilder)">
+            <summary>
+            Converts '[' and ']' UTF form to the regular characters.
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VRage.Utils.MyStringUtils.GetUniversalHashCode(System.String)">
+            <summary>
+            Platform agnostic hash code (same as x64 .NET Framework)
+            </summary>
+        </member>
         <member name="M:System.Reflection.FieldAccess.FieldHelper`2.#ctor(System.Reflection.FieldInfo)">
             <inheritdoc />
         </member>
@@ -2099,7 +2261,7 @@
             Checks for GZip header and if found, returns decompressed Stream, otherwise original Stream
             </summary>
         </member>
-        <member name="M:System.StreamExtensions.WrapGZip(System.IO.Stream,System.Boolean)">
+        <member name="M:System.StreamExtensions.WrapGZip(System.IO.Stream,System.Boolean,System.Boolean)">
             <summary>
             Wraps stream into GZip compression stream resulting in writing compressed stream
             </summary>
@@ -2138,6 +2300,14 @@
             Removes whitespace from the end.
             </summary>
         </member>
+        <member name="M:System.Text.StringBuilderExtensions_2.CompareTo(System.Text.StringBuilder,System.String)">
+            <summary>
+            returns 0 if its the same
+            </summary>
+            <param name="self"></param>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
         <member name="T:System.PreloadRequiredAttribute">
             <summary>
             Specifies that this class requires preload before running the game
@@ -2150,6 +2320,136 @@
             </summary>
             <param name="key">The key to locate in the json.</param>
             <returns>true if the json contains an element that has the specified key; otherwise, false.</returns>
+        </member>
+        <member name="T:ParallelTasks.MySpinWait">
+            <summary>
+            Provides support for spin-based waiting.
+            </summary>
+            <remarks>
+            <para>
+            <see cref="T:ParallelTasks.MySpinWait"/> encapsulates common spinning logic. On single-processor machines, yields are
+            always used instead of busy waits, and on computers with Intel™ processors employing Hyper-Threading™
+            technology, it helps to prevent hardware thread starvation. MySpinWait encapsulates a good mixture of
+            spinning and true yielding.
+            </para>
+            <para>
+            <see cref="T:ParallelTasks.MySpinWait"/> is a value type, which means that low-level code can utilize MySpinWait without
+            fear of unnecessary allocation overheads. MySpinWait is not generally useful for ordinary applications.
+            In most cases, you should use the synchronization classes provided by the .NET Framework, such as
+            <see cref="T:System.Threading.Monitor"/>. For most purposes where spin waiting is required, however,
+            the <see cref="T:ParallelTasks.MySpinWait"/> type should be preferred over the <see
+            cref="M:System.Threading.Thread.SpinWait(System.Int32)"/> method.
+            </para>
+            <para>
+            While MySpinWait is designed to be used in concurrent applications, it is not designed to be
+            used from multiple threads concurrently.  MySpinWait's members are not thread-safe.  If multiple
+            threads must spin, each should use its own instance of MySpinWait.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:ParallelTasks.MySpinWait.Count">
+            <summary>
+            Gets the number of times <see cref="M:ParallelTasks.MySpinWait.SpinOnce"/> has been called on this instance.
+            </summary>
+        </member>
+        <member name="P:ParallelTasks.MySpinWait.NextSpinWillYield">
+            <summary>
+            Gets whether the next call to <see cref="M:ParallelTasks.MySpinWait.SpinOnce"/> will yield the processor, triggering a
+            forced context switch.
+            </summary>
+            <value>Whether the next call to <see cref="M:ParallelTasks.MySpinWait.SpinOnce"/> will yield the processor, triggering a
+            forced context switch.</value>
+            <remarks>
+            On a single-CPU machine, <see cref="M:ParallelTasks.MySpinWait.SpinOnce"/> always yields the processor. On machines with
+            multiple CPUs, <see cref="M:ParallelTasks.MySpinWait.SpinOnce"/> may yield after an unspecified number of calls.
+            </remarks>
+        </member>
+        <member name="M:ParallelTasks.MySpinWait.SpinOnce">
+            <summary>
+            Performs a single spin.
+            </summary>
+            <remarks>
+            This is typically called in a loop, and may change in behavior based on the number of times a
+            <see cref="M:ParallelTasks.MySpinWait.SpinOnce"/> has been called thus far on this instance.
+            </remarks>
+        </member>
+        <member name="M:ParallelTasks.MySpinWait.Reset">
+            <summary>
+            Resets the spin counter.
+            </summary>
+            <remarks>
+            This makes <see cref="M:ParallelTasks.MySpinWait.SpinOnce"/> and <see cref="P:ParallelTasks.MySpinWait.NextSpinWillYield"/> behave as though no calls
+            to <see cref="M:ParallelTasks.MySpinWait.SpinOnce"/> had been issued on this instance. If a <see cref="T:ParallelTasks.MySpinWait"/> instance
+            is reused many times, it may be useful to reset it to avoid yielding too soon.
+            </remarks>
+        </member>
+        <member name="M:ParallelTasks.MySpinWait.SpinUntil(System.Func{System.Boolean})">
+            <summary>
+            Spins until the specified condition is satisfied.
+            </summary>
+            <param name="condition">A delegate to be executed over and over until it returns true.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="condition"/> argument is null.</exception>
+        </member>
+        <member name="M:ParallelTasks.MySpinWait.SpinUntil(System.Func{System.Boolean},System.TimeSpan)">
+            <summary>
+            Spins until the specified condition is satisfied or until the specified timeout is expired.
+            </summary>
+            <param name="condition">A delegate to be executed over and over until it returns true.</param>
+            <param name="timeout">
+            A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait, 
+            or a TimeSpan that represents -1 milliseconds to wait indefinitely.</param>
+            <returns>True if the condition is satisfied within the timeout; otherwise, false</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="condition"/> argument is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number
+            other than -1 milliseconds, which represents an infinite time-out -or- timeout is greater than
+            <see cref="F:System.Int32.MaxValue"/>.</exception>
+        </member>
+        <member name="M:ParallelTasks.MySpinWait.SpinUntil(System.Func{System.Boolean},System.Int32)">
+            <summary>
+            Spins until the specified condition is satisfied or until the specified timeout is expired.
+            </summary>
+            <param name="condition">A delegate to be executed over and over until it returns true.</param>
+            <param name="millisecondsTimeout">The number of milliseconds to wait, or <see
+            cref="F:System.Threading.Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+            <returns>True if the condition is satisfied within the timeout; otherwise, false</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="condition"/> argument is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a
+            negative number other than -1, which represents an infinite time-out.</exception>
+        </member>
+        <member name="T:ParallelTasks.PlatformHelper">
+            <summary>
+            A helper class to get the number of processors, it updates the numbers of processors every sampling interval.
+            </summary>
+        </member>
+        <member name="P:ParallelTasks.PlatformHelper.ProcessorCount">
+            <summary>
+            Gets the number of available processors
+            </summary>
+        </member>
+        <member name="P:ParallelTasks.PlatformHelper.IsSingleProcessor">
+            <summary>
+            Gets whether the current machine has only a single processor.
+            </summary>
+        </member>
+        <member name="T:ParallelTasks.TimeoutHelper">
+            <summary>
+            A helper class to capture a start time using Environment.TickCout as a time in milliseconds, also updates a given timeout bu subtracting the current time from
+            the start time
+            </summary>
+        </member>
+        <member name="M:ParallelTasks.TimeoutHelper.GetTime">
+            <summary>
+            Returns start time
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ParallelTasks.TimeoutHelper.UpdateTimeOut(System.Int64,System.Int32)">
+            <summary>
+            Helper function to measure and update the elapsed time
+            </summary>
+            <param name="startTime"> The first time (in milliseconds) observed when the wait started</param>
+            <param name="originalWaitMillisecondsTimeout">The orginal wait timeoutout in milliseconds</param>
+            <returns>The new wait time in milliseconds, -1 if the time expired</returns>
         </member>
         <member name="M:ParallelTasks.DependencyBatch.Add(System.Action)">
              <summary>
@@ -2484,7 +2784,7 @@
             THIS CANNOT BE RUN FROM ANY WORKER!
             </summary>
         </member>
-        <member name="M:ParallelTasks.Parallel.Start``1(System.Func{``0})">
+        <member name="M:ParallelTasks.Parallel.Start``1(System.Func{``0},ParallelTasks.WorkPriority)">
             <summary>
             Creates and starts a task which executes the given function and stores the result for later retrieval.
             </summary>
@@ -2492,7 +2792,7 @@
             <param name="function">The function to execute in parallel.</param>
             <returns>A future which represults one execution of the function.</returns>
         </member>
-        <member name="M:ParallelTasks.Parallel.Start``1(System.Func{``0},System.Action)">
+        <member name="M:ParallelTasks.Parallel.Start``1(System.Func{``0},System.Action,ParallelTasks.WorkPriority)">
             <summary>
             Creates and starts a task which executes the given function and stores the result for later retrieval.
             </summary>
@@ -2501,7 +2801,7 @@
             <param name="completionCallback">A method which will be called in Parallel.RunCallbacks() once this task has completed.</param>
             <returns>A future which represults one execution of the function.</returns>
         </member>
-        <member name="M:ParallelTasks.Parallel.Start``1(System.Func{``0},ParallelTasks.WorkOptions)">
+        <member name="M:ParallelTasks.Parallel.Start``1(System.Func{``0},ParallelTasks.WorkOptions,ParallelTasks.WorkPriority)">
             <summary>
             Creates and starts a task which executes the given function and stores the result for later retrieval.
             </summary>
@@ -2510,7 +2810,7 @@
             <param name="options">The work options to use with this action.</param>
             <returns>A future which represents one execution of the function.</returns>
         </member>
-        <member name="M:ParallelTasks.Parallel.Start``1(System.Func{``0},ParallelTasks.WorkOptions,System.Action)">
+        <member name="M:ParallelTasks.Parallel.Start``1(System.Func{``0},ParallelTasks.WorkOptions,System.Action,ParallelTasks.WorkPriority)">
             <summary>
             Creates and starts a task which executes the given function and stores the result for later retrieval.
             </summary>
@@ -2646,11 +2946,6 @@
         <member name="F:ParallelTasks.PrioritizedScheduler.WorkerArray.m_taskQueue">
             <summary>
             Task queues. Even in one worker group, tasks will be sorted according to their priority.
-            </summary>
-        </member>
-        <member name="F:ParallelTasks.PrioritizedScheduler.WorkerArray.m_scheduledTaskCount">
-            <summary>
-            Total number of tasks inside the queue.
             </summary>
         </member>
         <member name="F:ParallelTasks.PrioritizedScheduler.WorkerArray.m_workers">
