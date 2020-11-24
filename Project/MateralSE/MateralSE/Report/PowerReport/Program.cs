@@ -1,9 +1,7 @@
-﻿using System;
+﻿using MateralSE.Models;
 using Sandbox.ModAPI.Ingame;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
 
 namespace MateralSE.Report.PowerReport
 {
@@ -46,34 +44,6 @@ namespace MateralSE.Report.PowerReport
             return result;
         }
         /// <summary>
-        /// 初始化主要文本面板
-        /// </summary>
-        /// <param name="mainTextSurfaceNames"></param>
-        private void InitTextSurface(IReadOnlyCollection<string> mainTextSurfaceNames)
-        {
-            var textSurfaces = new List<IMyTextSurface>();
-            foreach (string mainTextSurfaceName in mainTextSurfaceNames)
-            {
-                string[] trueNames = mainTextSurfaceName.Split('&');
-                if (trueNames.Length == 1)
-                {
-                    var textSurface = GridTerminalSystem.GetBlockWithName(trueNames[0]) as IMyTextSurface;
-                    textSurfaces.Add(textSurface);
-                }
-                else if (trueNames.Length == 2)
-                {
-                    var index = Convert.ToInt32(trueNames[1]);
-                    var textSurfaceProvider = GridTerminalSystem.GetBlockWithName(trueNames[0]) as IMyTextSurfaceProvider;
-                    if (textSurfaceProvider != null && textSurfaceProvider.SurfaceCount >= index)
-                    {
-                        textSurfaces.Add(textSurfaceProvider.GetSurface(index));
-                    }
-                }
-            }
-            textSurfaces.Add(Me.GetSurface(0));
-            _mainTextSurfaces = new TextSurfacesModel(textSurfaces);
-        }
-        /// <summary>
         /// 初始化电池方块
         /// </summary>
         /// <param name="mainBatteryPrefix">主要电池前缀名</param>
@@ -103,7 +73,7 @@ namespace MateralSE.Report.PowerReport
         private void InitBlocks()
         {
             var _config = new ConfigModel(Me.CustomData);
-            InitTextSurface(_config.MainTextSurfaceNames);
+            _mainTextSurfaces = TextSurfacesModel.InitTextSurface(_config.MainTextSurfaceNames, GridTerminalSystem, Me);
             InitBatteryBlocks(_config.MainBatteryPrefix);
         }
         /// <summary>
@@ -133,51 +103,6 @@ namespace MateralSE.Report.PowerReport
                             MainBatteryPrefix = arguments[i];
                             break;
                     }
-                }
-            }
-        }
-        /// <summary>
-        /// 电池方块组模型
-        /// </summary>
-        public class BatteryBlocksModel
-        {
-            private readonly ICollection<IMyBatteryBlock> _batteryBlocks;
-            /// <summary>
-            /// 总电量
-            /// </summary>
-            public float TotalPower => _batteryBlocks.Sum(m => m.MaxStoredPower);
-            /// <summary>
-            /// 当前电量
-            /// </summary>
-            public float CurrentPower => _batteryBlocks.Sum(m => m.CurrentStoredPower);
-            /// <summary>
-            /// 比例
-            /// </summary>
-            public float Ratio => TotalPower > 0 ? CurrentPower / TotalPower : 0;
-            /// <summary>
-            /// 电池数量
-            /// </summary>
-            public int BatteryCount => _batteryBlocks.Count;
-            public BatteryBlocksModel(ICollection<IMyBatteryBlock> batteryBlocks)
-            {
-                _batteryBlocks = batteryBlocks;
-            }
-        }
-        /// <summary>
-        /// 文本面板模型
-        /// </summary>
-        public class TextSurfacesModel
-        {
-            private readonly ICollection<IMyTextSurface> _textSurfaces;
-            public TextSurfacesModel(ICollection<IMyTextSurface> textSurfaces)
-            {
-                _textSurfaces = textSurfaces;
-            }
-            public void WriteText(string text)
-            {
-                foreach (IMyTextSurface textSurface in _textSurfaces)
-                {
-                    textSurface.WriteText(text);
                 }
             }
         }

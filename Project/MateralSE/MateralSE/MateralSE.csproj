@@ -59,6 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Init\Rename\Program.cs" />
+    <Compile Include="Models\BatteryBlocksModel.cs" />
+    <Compile Include="Models\InventoryModel.cs" />
+    <Compile Include="Models\TextSurfacesModel.cs" />
+    <Compile Include="Report\InventoryReport\Program.cs" />
     <Compile Include="Report\PowerReport\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report\ResourceReport\Program.cs" />
