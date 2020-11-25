@@ -47,6 +47,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="VRage">
+      <HintPath>..\Libs\VRage.dll</HintPath>
+    </Reference>
     <Reference Include="VRage.Game">
       <HintPath>..\Libs\VRage.Game.dll</HintPath>
     </Reference>

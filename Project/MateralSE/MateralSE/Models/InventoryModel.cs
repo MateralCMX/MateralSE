@@ -137,15 +137,6 @@ namespace MateralSE.Models
             }
         }
         /// <summary>
-        /// 添加一个物品
-        /// </summary>
-        /// <param name="inventoryItem"></param>
-        public void AddItem(MyInventoryItem inventoryItem)
-        {
-            ItemModel item = Items.FirstOrDefault(m => m.TypeID == inventoryItem.Type.TypeId && m.SubtypeID == inventoryItem.Type.SubtypeId);
-            item?.AddAmount(inventoryItem.Amount);
-        }
-        /// <summary>
         /// 构造函数
         /// </summary>
         public InventoryModel()
@@ -185,6 +176,15 @@ namespace MateralSE.Models
             {
                 AddItem(inventoryItem);
             }
+        }
+        /// <summary>
+        /// 添加一个物品
+        /// </summary>
+        /// <param name="inventoryItem"></param>
+        private void AddItem(MyInventoryItem inventoryItem)
+        {
+            ItemModel item = Items.FirstOrDefault(m => m.TypeID == inventoryItem.Type.TypeId && m.SubtypeID == inventoryItem.Type.SubtypeId);
+            item?.AddAmount(inventoryItem.Amount);
         }
     }
     /// <summary>
