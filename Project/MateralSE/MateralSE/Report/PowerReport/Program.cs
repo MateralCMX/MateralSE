@@ -11,8 +11,8 @@ namespace MateralSE.Report.PowerReport
     [SuppressMessage("ReSharper", "UsePatternMatching")]
     public class Program : MyGridProgram
     {
-        //CustomData:主要文本面板名称1&0|主要文本面板名称2|,主要电池前缀名
-        private const string _mainName = "基地电池";
+        //CustomData:主要电池前缀名,主要文本面板名称1&0|主要文本面板名称2|
+        private const string _mainName = "飞电池";
         private const string _otherName = "其他电池";
         private BatteryBlocksModel _mainBatteryBlocks;
         private BatteryBlocksModel _otherBatteryBlocks;
@@ -97,10 +97,10 @@ namespace MateralSE.Report.PowerReport
                     switch (i)
                     {
                         case 0:
-                            MainTextSurfaceNames = arguments[i].Split('|');
+                            MainBatteryPrefix = arguments[i];
                             break;
                         case 1:
-                            MainBatteryPrefix = arguments[i];
+                            MainTextSurfaceNames = arguments[i].Split('|');
                             break;
                     }
                 }

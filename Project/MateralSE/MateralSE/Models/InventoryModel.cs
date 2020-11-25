@@ -17,21 +17,21 @@ namespace MateralSE.Models
         /// </summary>
         private static readonly Dictionary<string, ItemDefaultModel> OreDic = new Dictionary<string, ItemDefaultModel>
         {
-            ["Ice"] = new ItemDefaultModel("冰", 100000)
+            ["Ice"] = new ItemDefaultModel("冰", 50000)
         };
         /// <summary>
         /// 矿锭字典
         /// </summary>
         private static readonly Dictionary<string, ItemDefaultModel> IngotDic = new Dictionary<string, ItemDefaultModel>
         {
-            ["Stone"] = new ItemDefaultModel("碎石", 40000),
-            ["Iron"] = new ItemDefaultModel("铁锭", 200000),
-            ["Silicon"] = new ItemDefaultModel("硅片", 100000),
-            ["Nickel"] = new ItemDefaultModel("镍锭", 100000),
-            ["Cobalt"] = new ItemDefaultModel("钴锭", 60000),
-            ["Magnesium"] = new ItemDefaultModel("镁粉", 1000),
-            ["Gold"] = new ItemDefaultModel("金锭", 1000),
-            ["Silver"] = new ItemDefaultModel("银锭", 10000),
+            //["Stone"] = new ItemDefaultModel("碎石", 40000),
+            //["Iron"] = new ItemDefaultModel("铁锭", 200000),
+            //["Silicon"] = new ItemDefaultModel("硅片", 100000),
+            //["Nickel"] = new ItemDefaultModel("镍锭", 100000),
+            //["Cobalt"] = new ItemDefaultModel("钴锭", 60000),
+            //["Magnesium"] = new ItemDefaultModel("镁粉", 1000),
+            //["Gold"] = new ItemDefaultModel("金锭", 1000),
+            //["Silver"] = new ItemDefaultModel("银锭", 10000),
             //["Platinum"] = new ItemDefaultModel("铂锭", 1000),
             //["Uranium"] = new ItemDefaultModel("铀棒", 1000)
         };
@@ -40,36 +40,36 @@ namespace MateralSE.Models
         /// </summary>
         private static readonly Dictionary<string, ItemDefaultModel> ComponentDic = new Dictionary<string, ItemDefaultModel>
         {
-            ["SteelPlate"] = new ItemDefaultModel("钢板", 20000),
-            ["Construction"] = new ItemDefaultModel("结构零件", 20000),
-            ["InteriorPlate"] = new ItemDefaultModel("内衬板", 20000),
-            ["Computer"] = new ItemDefaultModel("计算机", 20000),
-            ["SmallTube"] = new ItemDefaultModel("小钢管", 20000),
-            ["LargeTube"] = new ItemDefaultModel("大钢管", 10000),
-            ["Display"] = new ItemDefaultModel("显示器", 10000),
-            ["Motor"] = new ItemDefaultModel("马达", 20000),
-            ["MetalGrid"] = new ItemDefaultModel("金属网格", 20000),
-            ["PowerCell"] = new ItemDefaultModel("动力电池", 20000),
-            ["BulletproofGlass"] = new ItemDefaultModel("防弹玻璃", 10000),
-            ["Girder"] = new ItemDefaultModel("梁", 10000),
-            ["Medical"] = new ItemDefaultModel("医疗零件", 200),
-            ["SolarCell"] = new ItemDefaultModel("太阳能电池板", 10000),
-            ["Detector"] = new ItemDefaultModel("探测器零件", 1000),
+            //["SteelPlate"] = new ItemDefaultModel("钢板", 20000),
+            //["Construction"] = new ItemDefaultModel("结构零件", 20000),
+            //["InteriorPlate"] = new ItemDefaultModel("内衬板", 20000),
+            //["Computer"] = new ItemDefaultModel("计算机", 20000),
+            //["SmallTube"] = new ItemDefaultModel("小钢管", 20000),
+            //["LargeTube"] = new ItemDefaultModel("大钢管", 10000),
+            //["Display"] = new ItemDefaultModel("显示器", 10000),
+            //["Motor"] = new ItemDefaultModel("马达", 20000),
+            //["MetalGrid"] = new ItemDefaultModel("金属网格", 20000),
+            //["PowerCell"] = new ItemDefaultModel("动力电池", 20000),
+            //["BulletproofGlass"] = new ItemDefaultModel("防弹玻璃", 10000),
+            //["Girder"] = new ItemDefaultModel("梁", 10000),
+            //["Medical"] = new ItemDefaultModel("医疗零件", 200),
+            //["SolarCell"] = new ItemDefaultModel("太阳能电池板", 10000),
+            //["Detector"] = new ItemDefaultModel("探测器零件", 1000),
             //["Thrust"] = new ItemDefaultModel("推进器零件", 1000),
-            ["RadioCommunication"] = new ItemDefaultModel("无线电零件", 1000),
-            ["Explosives"] = new ItemDefaultModel("爆炸物", 1000),
-            ["Superconductor"] = new ItemDefaultModel("超导体", 1000),
-            ["Reactor"] = new ItemDefaultModel("反应堆零件", 1000),
-            ["GravityGenerator"] = new ItemDefaultModel("重力发生器零件", 500),
-            ["Canvas"] = new ItemDefaultModel("帆布", 200),
+            //["RadioCommunication"] = new ItemDefaultModel("无线电零件", 1000),
+            //["Explosives"] = new ItemDefaultModel("爆炸物", 1000),
+            //["Superconductor"] = new ItemDefaultModel("超导体", 1000),
+            //["Reactor"] = new ItemDefaultModel("反应堆零件", 1000),
+            //["GravityGenerator"] = new ItemDefaultModel("重力发生器零件", 500),
+            //["Canvas"] = new ItemDefaultModel("帆布", 200),
         };
         /// <summary>
         /// 弹药字典
         /// </summary>
         private static readonly Dictionary<string, ItemDefaultModel> AmmoMagazineDic = new Dictionary<string, ItemDefaultModel>
         {
-            ["NATO_5p56x45mm"] = new ItemDefaultModel("5.56x45mm弹夹", 1000),
-            ["NATO_25x184mm"] = new ItemDefaultModel("25X184mm子弹", 1000),
+            //["NATO_5p56x45mm"] = new ItemDefaultModel("弹夹", 1000),
+            ["NATO_25x184mm"] = new ItemDefaultModel("子弹", 100),
             //["Missile200mm"] = new ItemDefaultModel("导弹", 1000)
         };
         #endregion
