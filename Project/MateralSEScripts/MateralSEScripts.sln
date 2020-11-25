@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MateralSEScripts", "MateralSEScripts\MateralSEScripts.csproj", "{323CA98B-8B04-435E-AFF0-1C466059B1BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{323CA98B-8B04-435E-AFF0-1C466059B1BB}.Debug|x64.ActiveCfg = Debug|x64
+		{323CA98B-8B04-435E-AFF0-1C466059B1BB}.Debug|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16545771-8E7C-4BA1-B5BC-5C7EF12DC5DA}
+	EndGlobalSection
+EndGlobal
