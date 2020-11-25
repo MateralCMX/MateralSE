@@ -27,8 +27,16 @@ namespace MateralSE.Report.ResourceReport
         /// <returns></returns>
         private string GetMainTextSurfaceText()
         {
-            if (_inventory.Items.All(m => !m.IsAlarm)) return "库存充足";
-            return _inventory.Items.Where(m => m.IsAlarm).OrderBy(m => m.Ratio).Aggregate("", (current, item) => current + $"{item.Name}：{item.AmountText}[ {item.LackAmountText} ]\r\n");
+            var result = $"已使用容量：{_inventory.UsedVolumeProportion * 100:N2}%\r\n";
+            if (_inventory.Items.All(m => !m.IsAlarm))
+            {
+                result += "库存充足";
+            }
+            else
+            {
+                result += _inventory.Items.Where(m => m.IsAlarm).OrderBy(m => m.Ratio).Aggregate("", (current, item) => current + $"{item.Name}：{item.AmountText}[ {item.LackAmountText} ]\r\n");
+            }
+            return result;
         }
         /// <summary>
         /// 初始化方块
@@ -48,7 +56,6 @@ namespace MateralSE.Report.ResourceReport
             IEnumerable<IMyTerminalBlock> terminalBlocks = GetHasInventoryBlocks();
             foreach (IMyTerminalBlock terminalBlock in terminalBlocks)
             {
-                Echo(terminalBlock.GetType().Name);
                 for (var i = 0; i < terminalBlock.InventoryCount; i++)
                 {
                     IMyInventory inventory = terminalBlock.GetInventory(i);

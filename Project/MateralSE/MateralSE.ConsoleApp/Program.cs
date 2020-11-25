@@ -28,8 +28,16 @@ namespace MateralSE.ConsoleApp
         /// <returns></returns>
         private string GetMainTextSurfaceText()
         {
-            if (_inventory.Items.All(m => !m.IsAlarm)) return "库存充足";
-            return _inventory.Items.Where(m => m.IsAlarm).OrderBy(m => m.Ratio).Aggregate("", (current, item) => current + $"{item.Name}：{item.AmountText}[ {item.LackAmountText} ]\r\n");
+            var result = $"已使用容量：{_inventory.UsedVolumeProportion * 100:N2}%\r\n";
+            if (_inventory.Items.All(m => !m.IsAlarm))
+            {
+                result += "库存充足";
+            }
+            else
+            {
+                result += _inventory.Items.Where(m => m.IsAlarm).OrderBy(m => m.Ratio).Aggregate("", (current, item) => current + $"{item.Name}：{item.AmountText}[ {item.LackAmountText} ]\r\n");
+            }
+            return result;
         }
         /// <summary>
         /// 初始化方块
@@ -49,7 +57,6 @@ namespace MateralSE.ConsoleApp
             IEnumerable<IMyTerminalBlock> terminalBlocks = GetHasInventoryBlocks();
             foreach (IMyTerminalBlock terminalBlock in terminalBlocks)
             {
-                Echo(terminalBlock.GetType().Name);
                 for (var i = 0; i < terminalBlock.InventoryCount; i++)
                 {
                     IMyInventory inventory = terminalBlock.GetInventory(i);
@@ -157,6 +164,9 @@ namespace MateralSE.ConsoleApp
                 //["Missile200mm"] = new ItemDefaultModel("导弹", 1000)
             };
             #endregion
+            /// <summary>
+            /// 默认键
+            /// </summary>
             private const string DefaultKey = "default";
             /// <summary>
             /// 所有库存
@@ -174,6 +184,22 @@ namespace MateralSE.ConsoleApp
                 }
             }
             /// <summary>
+            /// 所有货仓库存
+            /// </summary>
+            public List<IMyInventory> AllCargoContainerInventories { get; } = new List<IMyInventory>();
+            /// <summary>
+            /// 最大容量
+            /// </summary>
+            public float MaxVolume => AllCargoContainerInventories.Sum(m => m.MaxVolume.RawValue);
+            /// <summary>
+            /// 当前容量
+            /// </summary>
+            public float CurrentVolume => AllCargoContainerInventories.Sum(m => m.CurrentVolume.RawValue);
+            /// <summary>
+            /// 已使用容量占比
+            /// </summary>
+            public float UsedVolumeProportion => CurrentVolume / MaxVolume;
+            /// <summary>
             /// 库存
             /// </summary>
             public Dictionary<string, List<IMyInventory>> Inventories { get; } = new Dictionary<string, List<IMyInventory>>();
@@ -190,7 +216,11 @@ namespace MateralSE.ConsoleApp
             {
                 if (terminalBlock != null)
                 {
-                    Add(terminalBlock.CustomName, inventory);
+                    Add(terminalBlock.Name, inventory);
+                    if (terminalBlock is IMyCargoContainer)
+                    {
+                        AllCargoContainerInventories.Add(inventory);
+                    }
                 }
                 else
                 {

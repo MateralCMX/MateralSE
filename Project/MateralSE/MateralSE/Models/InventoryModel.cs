@@ -73,6 +73,9 @@ namespace MateralSE.Models
             //["Missile200mm"] = new ItemDefaultModel("导弹", 1000)
         };
         #endregion
+        /// <summary>
+        /// 默认键
+        /// </summary>
         private const string DefaultKey = "default";
         /// <summary>
         /// 所有库存
@@ -90,6 +93,22 @@ namespace MateralSE.Models
             }
         }
         /// <summary>
+        /// 所有货仓库存
+        /// </summary>
+        public List<IMyInventory> AllCargoContainerInventories { get; } = new List<IMyInventory>();
+        /// <summary>
+        /// 最大容量
+        /// </summary>
+        public float MaxVolume => AllCargoContainerInventories.Sum(m => m.MaxVolume.RawValue);
+        /// <summary>
+        /// 当前容量
+        /// </summary>
+        public float CurrentVolume => AllCargoContainerInventories.Sum(m => m.CurrentVolume.RawValue);
+        /// <summary>
+        /// 已使用容量占比
+        /// </summary>
+        public float UsedVolumeProportion => CurrentVolume / MaxVolume;
+        /// <summary>
         /// 库存
         /// </summary>
         public Dictionary<string, List<IMyInventory>> Inventories { get; } = new Dictionary<string, List<IMyInventory>>();
@@ -106,7 +125,11 @@ namespace MateralSE.Models
         {
             if (terminalBlock != null)
             {
-                Add(terminalBlock.CustomName, inventory);
+                Add(terminalBlock.Name, inventory);
+                if (terminalBlock is IMyCargoContainer)
+                {
+                    AllCargoContainerInventories.Add(inventory);
+                }
             }
             else
             {
